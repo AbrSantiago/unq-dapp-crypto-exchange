@@ -27,6 +27,9 @@ jobs:
       - name: Build with Gradle Wrapper
         run: ./gradlew build
 
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
   dependency-submission:
 
     runs-on: ubuntu-latest
