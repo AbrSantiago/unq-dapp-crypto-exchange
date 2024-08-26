@@ -11,8 +11,4 @@ class DappApiApplicationTests {
 	void contextLoads() {
 	}
 
-	@Test
-	void failTest() {
-        Assertions.fail();
-	}
 }
