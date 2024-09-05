@@ -1,6 +1,6 @@
-package ar.edu.unq.dapp_api.model;
+package ar.edu.unq.dapp_api.model.enums;
 
-public enum CryptoCurrencyEnum {
+public enum CryptoSymbol {
     ALICEUSDT,
     MATICUSDT,
     AXSUSDT,

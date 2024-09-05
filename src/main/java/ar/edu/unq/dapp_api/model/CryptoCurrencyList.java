@@ -1,15 +1,20 @@
 package ar.edu.unq.dapp_api.model;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
+import java.util.List;
 
+@Getter
 public class CryptoCurrencyList {
-    public ArrayList<CryptoCurrency> cryptos;
+    private final List<CryptoCurrency> cryptos;
 
-    public CryptoCurrencyList(ArrayList<CryptoCurrency> cryptos) {
-        this.cryptos = cryptos;
+    public CryptoCurrencyList() {
+        this.cryptos = new ArrayList<>();
     }
 
     public void addCrypto(CryptoCurrency crypto) {
         cryptos.add(crypto);
     }
+
 }

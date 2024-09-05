@@ -1,8 +1,10 @@
 package ar.edu.unq.dapp_api.model;
 
+import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 import lombok.*;
 
 import java.io.Serializable;
+
 
 @Getter
 @Setter
@@ -10,14 +12,14 @@ import java.io.Serializable;
 public class CryptoCurrency implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private String symbol;
+    private CryptoSymbol symbol;
     private Float price;
     private String lastUpdateDateAndTime;
 
     public CryptoCurrency() {
     }
 
-    public CryptoCurrency(String symbol, Float price, String lastUpdateDateAndTime) {
+    public CryptoCurrency(CryptoSymbol symbol, Float price, String lastUpdateDateAndTime) {
         this.symbol = symbol;
         this.price = price;
         this.lastUpdateDateAndTime = lastUpdateDateAndTime;
