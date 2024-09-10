@@ -6,9 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -97,5 +95,4 @@ public class User {
     public void addPoints(int points) {
         pointsObtained += points;
     }
-
 }
