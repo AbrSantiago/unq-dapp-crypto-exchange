@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class UserBuilderTest {
+class UserBuilderTest {
     @Test
-    public void testUserBuilder() {
+    void testUserBuilder() {
         User user = new UserBuilder().build();
         assertEquals("no name", user.getName());
         assertEquals("no surname", user.getSurname());
@@ -21,55 +21,55 @@ public class UserBuilderTest {
     }
 
     @Test
-    public void testUserNameBuilder() {
+    void testUserNameBuilder() {
         User user = new UserBuilder().withName("Juan").build();
         assertEquals("Juan", user.getName());
     }
 
     @Test
-    public void testUserSurnameBuilder() {
+    void testUserSurnameBuilder() {
         User user = new UserBuilder().withSurname("Doe").build();
         assertEquals("Doe", user.getSurname());
     }
 
     @Test
-    public void testUserEmailBuilder() {
+    void testUserEmailBuilder() {
         User user = new UserBuilder().withEmail("asd@gmail.com").build();
         assertEquals("asd@gmail.com", user.getEmail());
     }
 
     @Test
-    public void testUserAddressBuilder() {
+    void testUserAddressBuilder() {
         User user = new UserBuilder().withAddress("street 123").build();
         assertEquals("street 123", user.getAddress());
     }
 
     @Test
-    public void testUserPasswordBuilder() {
+    void testUserPasswordBuilder() {
         User user = new UserBuilder().withPassword("123132123").build();
         assertEquals("123132123", user.getPassword());
     }
 
     @Test
-    public void testUserCvuBuilder() {
+    void testUserCvuBuilder() {
         User user = new UserBuilder().withCvu("1234512345123451234512").build();
         assertEquals("1234512345123451234512", user.getCvu());
     }
 
     @Test
-    public void testUserWalletAddressBuilder() {
+    void testUserWalletAddressBuilder() {
         User user = new UserBuilder().withWalletAddress("12341234").build();
         assertEquals("12341234", user.getWalletAddress());
     }
 
     @Test
-    public void testUserPointsObtainedBuilder() {
+    void testUserPointsObtainedBuilder() {
         User user = new UserBuilder().withPointsObtained(2).build();
         assertEquals(2, user.getPointsObtained());
     }
 
     @Test
-    public void testUserOperationsPerformedBuilder() {
+    void testUserOperationsPerformedBuilder() {
         User user = new UserBuilder().withOperationsPerformed(2).build();
         assertEquals(2, user.getOperationsPerformed());
     }

@@ -10,16 +10,16 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserTest {
+class UserTest {
     private final Validator validator;
 
-    public UserTest() {
+    UserTest() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
     }
 
     @Test
-    public void testUserConstructor() {
+    void testUserConstructor() {
         User user = new User("test@example.com", "12345678", "John", "Doe", "123 Main St", "Password1!", "1234567890123456789012");
 
         assertEquals("test@example.com", user.getEmail());
@@ -32,7 +32,7 @@ public class UserTest {
     }
 
     @Test
-    public void testUserSettersAndGetters() {
+    void testUserSettersAndGetters() {
         User user = new User();
         user.setEmail("test@example.com");
         user.setName("John");
@@ -52,28 +52,28 @@ public class UserTest {
     }
 
     @Test
-    public void testInvalidUserEmail() {
+    void testInvalidUserEmail() {
         User user = new User("invalid-email", "12345678", "John", "Doe", "123 Main St", "Password1!", "1234567890123456789012");
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertFalse(violations.isEmpty());
     }
 
     @Test
-    public void testInvalidUserPassword() {
+    void testInvalidUserPassword() {
         User user = new User("test@example.com", "12345678", "John", "Doe", "123 Main St", "password", "1234567890123456789012");
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertFalse(violations.isEmpty());
     }
 
     @Test
-    public void testInvalidUserCvu() {
+    void testInvalidUserCvu() {
         User user = new User("test@example.com", "12345678", "John", "Doe", "123 Main St", "Password1!", "123");
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertFalse(violations.isEmpty());
     }
 
     @Test
-    public void testInvalidUserWalletAddress() {
+    void testInvalidUserWalletAddress() {
         User user = new User("test@example.com", "123", "John", "Doe", "123 Main St", "Password1!", "1234567890123456789012");
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertFalse(violations.isEmpty());
