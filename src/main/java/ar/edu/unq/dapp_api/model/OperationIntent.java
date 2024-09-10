@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 
 @Getter
 public class OperationIntent {
-
     private final CryptoSymbol symbol;
     private final Long cryptoAmount;
     private final Long cryptoPrice;
