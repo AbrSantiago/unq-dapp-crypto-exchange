@@ -46,3 +46,29 @@ jobs:
 
       - name: Generate and submit dependency graph
         uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582
+
+
+  sonarcloud_analysis:
+    needs: ["build", "test"]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project sources
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 22
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '22'
+
+      - name: Grant execute permission to gradlew
+        run: chmod +x ./gradlew
+        working-directory: .
+
+      - name: SonarCloud analysis
+        run: ./gradlew build jacocoTestReport sonarqube --info
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        working-directory: .
