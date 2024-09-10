@@ -1,4 +1,7 @@
 # Dapp API
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=AbrSantiago_unq-dapp-crypto-exchange&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=AbrSantiago_unq-dapp-crypto-exchange)
+
 ## Descripción
 Este proyecto es un MVP (Minimum Viable Product) para un sistema de intercambio de criptomonedas Peer-to-Peer (P2P). El objetivo es crear una comunidad de confianza para canjear criptomonedas por pesos argentinos. El sistema es similar a billeteras que permiten pagos P2P entre personas, como Airtm, Skrill o Binance.
 
