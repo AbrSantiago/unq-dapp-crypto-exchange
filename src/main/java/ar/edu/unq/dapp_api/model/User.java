@@ -88,6 +88,11 @@ public class User {
         this.discountPoints(transaction.cancelByUserPoints());
     }
 
+    public void cancelTransaction2(Transaction transaction) {
+        transaction.cancelTransaction();
+        this.discountPoints(transaction.cancelByUserPoints());
+    }
+
     public void discountPoints(int points) {
         pointsObtained -= points;
     }
