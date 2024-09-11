@@ -33,7 +33,7 @@ jobs:
       - name: SonarCloud Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonarqube
+        run: ./gradlew sonar
 
   dependency-submission:
 
