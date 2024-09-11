@@ -4,6 +4,7 @@ plugins {
 	id 'org.springframework.boot' version '3.3.2'
 	id 'io.spring.dependency-management' version '1.1.6'
 	id "org.sonarqube" version "4.4.1.3373"
+	id "jacoco"
 }
 
 sonar {
@@ -11,6 +12,7 @@ sonar {
 		property "sonar.projectKey", "AbrSantiago_unq-dapp-crypto-exchange"
 		property "sonar.organization", "abrsantiago"
 		property "sonar.host.url", "https://sonarcloud.io"
+		property "sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
 	}
 }
 
@@ -42,8 +44,12 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+jacocoTestReport {
+	reports {
+		xml.required.set(true)
+	}
+}
 
-
-tasks.named('test') {
-	useJUnitPlatform()
+plugins.withType(JacocoPlugin) {
+	tasks["test"].finalizedBy 'jacocoTestReport'
 }
