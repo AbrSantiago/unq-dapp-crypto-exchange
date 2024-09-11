@@ -50,6 +50,10 @@ jacocoTestReport {
 	}
 }
 
+tasks.test {
+	finalizedBy tasks.jacocoTestReport
+}
+
 plugins.withType(JacocoPlugin) {
 	tasks["test"].finalizedBy 'jacocoTestReport'
 }
