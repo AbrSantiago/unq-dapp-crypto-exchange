@@ -38,6 +38,11 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew sonar
 
+      - name: SonarCloud analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew build jacocoTestReport sonarqube --info
+
   dependency-submission:
 
     runs-on: ubuntu-latest
