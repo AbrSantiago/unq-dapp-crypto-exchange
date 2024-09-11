@@ -12,7 +12,7 @@ sonar {
 		property "sonar.projectKey", "AbrSantiago_unq-dapp-crypto-exchange"
 		property "sonar.organization", "abrsantiago"
 		property "sonar.host.url", "https://sonarcloud.io"
-		property "sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+		property "sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory.get()}/reports/jacoco/test/jacocoTestReport.xml"
 	}
 }
 
@@ -50,10 +50,14 @@ jacocoTestReport {
 	}
 }
 
-tasks.test {
-	finalizedBy tasks.jacocoTestReport
+tasks.jacocoTestReport {
+	reports {
+		xml.required.set(true)
+		csv.required.set(false)
+		html.required.set(false)
+	}
 }
 
-plugins.withType(JacocoPlugin) {
-	tasks["test"].finalizedBy 'jacocoTestReport'
+jacoco {
+	toolVersion = "0.8.8"
 }
