@@ -45,13 +45,13 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-jacocoTestReport {
-	reports {
-		xml.required.set(true)
-	}
+test {
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport
 }
 
-tasks.jacocoTestReport {
+jacocoTestReport {
+	dependsOn test
 	reports {
 		xml.required.set(true)
 		csv.required.set(false)
@@ -60,13 +60,5 @@ tasks.jacocoTestReport {
 }
 
 jacoco {
-	toolVersion = "0.8.8"
-}
-
-tasks.test {
-	finalizedBy tasks.jacocoTestReport
-}
-
-tasks.sonarqube {
-	dependsOn tasks.build
+	toolVersion = "0.8.7"
 }
