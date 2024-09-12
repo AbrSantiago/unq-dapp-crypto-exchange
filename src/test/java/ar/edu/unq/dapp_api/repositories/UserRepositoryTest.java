@@ -8,13 +8,13 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-public class UserRepositoryTest {
+class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
 
     @Test
-    public void testUserPersistence() {
+    void testUserPersistence() {
         User user = new User("test@example.com", "12345678", "John", "Doe", "123 Main St", "Password@123", "1234567890123456789012");
         userRepository.save(user);
 
