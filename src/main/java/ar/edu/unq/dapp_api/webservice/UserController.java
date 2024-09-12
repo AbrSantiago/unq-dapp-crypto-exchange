@@ -1,6 +1,8 @@
 package ar.edu.unq.dapp_api.webservice;
 
 import ar.edu.unq.dapp_api.model.User;
+import ar.edu.unq.dapp_api.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -10,16 +12,17 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
-    private List<User> users = new ArrayList<>();
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping
     public List<User> getAllUsers() {
-        return users;
+        return userRepository.findAll();
     }
 
     @PostMapping
     public User createUser(@RequestBody User user) {
-        users.add(user);
-        return user;
+        return userRepository.save(user);
     }
+
 }
