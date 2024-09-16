@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CryptoCurrencyListTest {
+class CryptoCurrencyListTest {
+
     @Test
     void addCryptoAddsCryptoToList() {
         CryptoCurrencyList cryptoList = new CryptoCurrencyList();

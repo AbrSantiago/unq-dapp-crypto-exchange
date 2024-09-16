@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CryptoCurrencyTest {
+class CryptoCurrencyTest {
+
     @Test
     void cryptoCurrencyBuilderCreatesInstanceCorrectly() {
         CryptoCurrency crypto = CryptoCurrency.builder()
