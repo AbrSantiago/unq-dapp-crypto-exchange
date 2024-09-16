@@ -27,6 +27,12 @@ class UserBuilderTest {
     }
 
     @Test
+    void testUserIdBuilder() {
+        User user = new UserBuilder().withId(2L).build();
+        assertEquals(2L, user.getId());
+    }
+
+    @Test
     void testUserSurnameBuilder() {
         User user = new UserBuilder().withSurname("Doe").build();
         assertEquals("Doe", user.getSurname());

@@ -4,6 +4,7 @@ import ar.edu.unq.dapp_api.model.User;
 import java.util.ArrayList;
 
 public class UserBuilder {
+    private Long id = 1L;
     private String name = "no name";
     private String surname = "no surname";
     private String email = "no@email.com";
@@ -13,6 +14,11 @@ public class UserBuilder {
     private String walletAddress = "12345678";
     private int pointsObtained = 0;
     private int operationsPerformed = 0;
+
+    public UserBuilder withId(Long id) {
+        this.id = id;
+        return this;
+    }
 
     public UserBuilder withName(String name) {
         this.name = name;
@@ -61,6 +67,7 @@ public class UserBuilder {
 
     public User build() {
         User user = new User();
+        user.setId(this.id);
         user.setName(this.name);
         user.setSurname(this.surname);
         user.setEmail(this.email);
