@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -56,7 +57,7 @@ public class User {
     private int operationsPerformed;
 
     @Transient
-    private ArrayList<OperationIntent> userOperationIntents;
+    private List<OperationIntent> userOperationIntents;
 
     public User(String email, String walletAddress, String name, String surname, String address, String password, String cvu) {
         this.email = email;
@@ -72,6 +73,7 @@ public class User {
     }
 
     public User() {
+        this.userOperationIntents = new ArrayList<>();
     }
 
     public OperationIntent publishOperationIntent(CryptoSymbol symbol, Long cryptoAmount, Long cryptoPrice, Long operationARSAmount, IntentionType type) {

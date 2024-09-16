@@ -1,5 +1,6 @@
 package ar.edu.unq.dapp_api.webservice;
 
+import ar.edu.unq.dapp_api.dto.RegisterUserDTO;
 import ar.edu.unq.dapp_api.exception.DuplicateResourceException;
 import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.repositories.UserRepository;
@@ -28,7 +29,16 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(@RequestBody User user) {
+    public User createUser(@RequestBody RegisterUserDTO simpleUser) {
+        User user = new User(
+                simpleUser.getEmail(),
+                simpleUser.getWalletAddress(),
+                simpleUser.getName(),
+                simpleUser.getSurname(),
+                simpleUser.getAddress(),
+                simpleUser.getPassword(),
+                simpleUser.getCvu()
+        );
         try {
             return userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
