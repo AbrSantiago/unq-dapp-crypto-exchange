@@ -28,6 +28,7 @@ public class User {
 
     @Email(message = "Please provide a valid email address")
     @NotBlank
+    @Column(unique = true)
     private String email;
 
     @Size(min = 10, max = 30)
@@ -40,10 +41,12 @@ public class User {
 
     @Size(min = 22, max = 22)
     @NotBlank
+    @Column(unique = true)
     private String cvu;
 
     @Size(min = 8, max = 8)
     @NotBlank
+    @Column(unique = true)
     private String walletAddress;
 
     @NotNull
