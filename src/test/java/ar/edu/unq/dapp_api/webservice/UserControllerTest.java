@@ -1,6 +1,5 @@
 package ar.edu.unq.dapp_api.webservice;
 
-import ar.edu.unq.dapp_api.exception.DuplicateResourceException;
 import ar.edu.unq.dapp_api.exception.GlobalExceptionHandler;
 import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.repositories.UserRepository;
@@ -24,7 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class UserControllerTest {
+class UserControllerTest {
 
     private MockMvc mockMvc;
 
