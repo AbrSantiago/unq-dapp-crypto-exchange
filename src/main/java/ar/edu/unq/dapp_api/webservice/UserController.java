@@ -4,6 +4,7 @@ import ar.edu.unq.dapp_api.dto.RegisterUserDTO;
 import ar.edu.unq.dapp_api.exception.DuplicateResourceException;
 import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.repositories.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(@RequestBody RegisterUserDTO simpleUser) {
+    public User createUser(@Valid @RequestBody RegisterUserDTO simpleUser) {
         User user = new User(
                 simpleUser.getEmail(),
                 simpleUser.getWalletAddress(),
