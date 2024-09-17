@@ -1,12 +1,13 @@
 package ar.edu.unq.dapp_api.model;
 
 import ar.edu.unq.dapp_api.model.builders.OperationIntentBuilder;
+import ar.edu.unq.dapp_api.exception.InvalidTransactionStateException;
+import ar.edu.unq.dapp_api.exception.TransactionCompletedException;
 import ar.edu.unq.dapp_api.model.builders.UserBuilder;
 import ar.edu.unq.dapp_api.model.enums.IntentionType;
 import ar.edu.unq.dapp_api.model.enums.OperationStatus;
 import ar.edu.unq.dapp_api.model.enums.TransactionStatus;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class TransactionTest {
@@ -45,7 +46,7 @@ class TransactionTest {
         Transaction transaction = new Transaction(intent, seller, buyer);
         transaction.completeTransfer();
 
-        assertThrows(IllegalArgumentException.class, transaction::completeTransfer);
+        assertThrows(TransactionCompletedException.class, transaction::completeTransfer);
     }
 
     @Test
@@ -69,7 +70,7 @@ class TransactionTest {
         OperationIntent intent = new OperationIntentBuilder().build();
         Transaction transaction = new Transaction(intent, seller, buyer);
 
-        assertThrows(IllegalArgumentException.class, transaction::confirmReception);
+        assertThrows(InvalidTransactionStateException.class, transaction::confirmReception);
     }
 
     @Test
