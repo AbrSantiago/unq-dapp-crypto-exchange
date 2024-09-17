@@ -1,8 +1,10 @@
 package ar.edu.unq.dapp_api.model;
 
+import ar.edu.unq.dapp_api.exception.InvalidTransactionStateException;
 import ar.edu.unq.dapp_api.model.builders.UserBuilder;
 import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 import ar.edu.unq.dapp_api.model.enums.IntentionType;
+import ar.edu.unq.dapp_api.model.enums.TransactionStatus;
 import org.junit.jupiter.api.Test;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -129,6 +131,7 @@ class UserTest {
         Transaction transaction = mock(Transaction.class);
 
         when(transaction.cancelByUserPoints()).thenReturn(20);
+        when(transaction.getStatus()).thenReturn(TransactionStatus.PENDING);
 
         user.cancelTransaction(transaction);
 
@@ -152,5 +155,44 @@ class UserTest {
         user.discountPoints(5);
 
         assertEquals(5, user.getPointsObtained());
+    }
+
+    @Test
+    void discountPointsThrowsExceptionWhenPointsWouldBeNegative() {
+        User user = new UserBuilder().withPointsObtained(5).build();
+
+        IllegalArgumentException thrown = assertThrows(
+            IllegalArgumentException.class, () -> user.discountPoints(10)
+        );
+
+        assertEquals("Points cannot be negative", thrown.getMessage());
+    }
+
+    @Test
+    void cancelTransactionThrowsExceptionWhenIsConfirmed() {
+        User user = new UserBuilder().build();
+        Transaction transaction = mock(Transaction.class);
+
+        when(transaction.getStatus()).thenReturn(TransactionStatus.CONFIRMED);
+
+        InvalidTransactionStateException thrown = assertThrows(
+                InvalidTransactionStateException.class, () -> user.cancelTransaction(transaction)
+        );
+
+        assertEquals("Cannot cancel a transaction that is already confirmed or transferred", thrown.getMessage());
+    }
+
+    @Test
+    void cancelTransactionThrowsExceptionWhenIsTransferred() {
+        User user = new UserBuilder().build();
+        Transaction transaction = mock(Transaction.class);
+
+        when(transaction.getStatus()).thenReturn(TransactionStatus.TRANSFERRED);
+
+        InvalidTransactionStateException thrown = assertThrows(
+                InvalidTransactionStateException.class, () -> user.cancelTransaction(transaction)
+        );
+
+        assertEquals("Cannot cancel a transaction that is already confirmed or transferred", thrown.getMessage());
     }
 }
