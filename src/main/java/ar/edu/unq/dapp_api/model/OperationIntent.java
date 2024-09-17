@@ -44,10 +44,13 @@ public class OperationIntent {
     }
 
     private void validateTransaction(Double currentPrice) {
-        boolean mustBeCancelled = this.cryptoPrice < (currentPrice - currentPrice * 0.05) || this.cryptoPrice > (currentPrice + currentPrice * 0.05);
-        if (mustBeCancelled) {
+        if (checkCancelTransaction(currentPrice)) {
                 this.transaction.cancelTransaction();
         }
+    }
+
+    private boolean checkCancelTransaction(Double currentPrice) {
+        return this.cryptoPrice < (currentPrice - currentPrice * 0.05) || this.cryptoPrice > (currentPrice + currentPrice * 0.05);
     }
 
     public void close() {
