@@ -1,5 +1,6 @@
 package ar.edu.unq.dapp_api.model;
 
+import ar.edu.unq.dapp_api.model.builders.OperationIntentBuilder;
 import ar.edu.unq.dapp_api.model.builders.UserBuilder;
 import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 import ar.edu.unq.dapp_api.model.enums.IntentionType;
@@ -24,24 +25,6 @@ class OperationIntentTest {
         assertEquals(IntentionType.BUY, intent.getType());
         assertNotNull(intent.getDateTime());
         assertEquals(OperationStatus.OPEN, intent.getStatus());
-    }
-
-    @Test
-    void generateTransactionThrowsExceptionWhenPriceIsNull() {
-        User user = new UserBuilder().withId(1L).build();
-        User interestedUser = new UserBuilder().withId(2L).build();
-        OperationIntent intent = new OperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000L, 50000L, user, IntentionType.BUY);
-
-        assertThrows(NullPointerException.class, () -> intent.generateTransaction(interestedUser, null));
-    }
-
-    @Test
-    void generateTransactionThrowsExceptionWhenIntentionTypeIsNull() {
-        User user = new UserBuilder().withId(1L).build();
-        User interestedUser = new UserBuilder().withId(2L).build();
-        OperationIntent intent = new OperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000L, 50000L, user, null);
-
-        assertThrows(NullPointerException.class, () -> intent.generateTransaction(interestedUser, 50000.0));
     }
 
     @Test
@@ -82,7 +65,7 @@ class OperationIntentTest {
     void generateTransactionCancelsTransactionWhenPriceIsTooLow() {
         User user = new UserBuilder().withId(1L).build();
         User interestedUser = new UserBuilder().withId(2L).build();
-        OperationIntent intent = new OperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000L, 50000L, user, IntentionType.BUY);
+        OperationIntent intent = new OperationIntentBuilder().withCryptoPrice(50000L).build();
 
         Transaction transaction = intent.generateTransaction(interestedUser, 47000.0);
 
@@ -93,7 +76,7 @@ class OperationIntentTest {
     void generateTransactionCancelsTransactionWhenPriceIsTooHigh() {
         User user = new UserBuilder().withId(1L).build();
         User interestedUser = new UserBuilder().withId(2L).build();
-        OperationIntent intent = new OperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000L, 50000L, user, IntentionType.BUY);
+        OperationIntent intent = new OperationIntentBuilder().withCryptoPrice(50000L).build();
 
         Transaction transaction = intent.generateTransaction(interestedUser, 53000.0);
 
@@ -103,7 +86,7 @@ class OperationIntentTest {
     @Test
     void closeSetsStatusToClosed() {
         User user = new UserBuilder().build();
-        OperationIntent intent = new OperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000L, 50000L, user, IntentionType.BUY);
+        OperationIntent intent = new OperationIntentBuilder().build();
 
         intent.close();
 

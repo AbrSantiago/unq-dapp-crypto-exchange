@@ -57,28 +57,28 @@ class UserTest {
 
     @Test
     void testInvalidUserEmail() {
-        User user = new User("invalid-email", "12345678", "John", "Doe", "123 Main St", "Password1!", "1234567890123456789012");
+        User user = new UserBuilder().withEmail("test").build();
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertFalse(violations.isEmpty());
     }
 
     @Test
     void testInvalidUserPassword() {
-        User user = new User("test@example.com", "12345678", "John", "Doe", "123 Main St", "password", "1234567890123456789012");
+        User user = new UserBuilder().withPassword("password").build();
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertFalse(violations.isEmpty());
     }
 
     @Test
     void testInvalidUserCvu() {
-        User user = new User("test@example.com", "12345678", "John", "Doe", "123 Main St", "Password1!", "123");
+        User user = new UserBuilder().withCvu("12345678901234567890123").build();
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertFalse(violations.isEmpty());
     }
 
     @Test
     void testInvalidUserWalletAddress() {
-        User user = new User("test@example.com", "123", "John", "Doe", "123 Main St", "Password1!", "1234567890123456789012");
+        User user = new UserBuilder().withWalletAddress("12345678901234567890123").build();
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertFalse(violations.isEmpty());
     }
