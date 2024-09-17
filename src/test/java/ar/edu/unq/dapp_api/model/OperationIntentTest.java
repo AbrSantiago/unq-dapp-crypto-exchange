@@ -9,6 +9,8 @@ import ar.edu.unq.dapp_api.model.enums.TransactionStatus;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class OperationIntentTest {
 
@@ -86,6 +88,21 @@ class OperationIntentTest {
         OperationIntent intent = new OperationIntentBuilder().build();
 
         intent.close();
+
+        assertEquals(OperationStatus.CLOSED, intent.getStatus());
+    }
+
+    @Test
+    void generateTransactionThrowsExceptionWhenIsClosed() {
+        User user = new UserBuilder().withId(1L).build();
+        User interestedUser = new UserBuilder().withId(2L).build();
+        OperationIntent intent = new OperationIntentBuilder().withUser(user).build();
+        Transaction transaction = mock(Transaction.class);
+
+        when(transaction.getStatus()).thenReturn(TransactionStatus.TRANSFERRED);
+
+
+        intent.generateTransaction(interestedUser, 53000.0);
 
         assertEquals(OperationStatus.CLOSED, intent.getStatus());
     }
