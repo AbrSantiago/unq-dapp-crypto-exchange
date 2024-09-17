@@ -63,7 +63,6 @@ class OperationIntentTest {
 
     @Test
     void generateTransactionCancelsTransactionWhenPriceIsTooLow() {
-        User user = new UserBuilder().withId(1L).build();
         User interestedUser = new UserBuilder().withId(2L).build();
         OperationIntent intent = new OperationIntentBuilder().withCryptoPrice(50000L).build();
 
@@ -74,7 +73,6 @@ class OperationIntentTest {
 
     @Test
     void generateTransactionCancelsTransactionWhenPriceIsTooHigh() {
-        User user = new UserBuilder().withId(1L).build();
         User interestedUser = new UserBuilder().withId(2L).build();
         OperationIntent intent = new OperationIntentBuilder().withCryptoPrice(50000L).build();
 
@@ -85,7 +83,6 @@ class OperationIntentTest {
 
     @Test
     void closeSetsStatusToClosed() {
-        User user = new UserBuilder().build();
         OperationIntent intent = new OperationIntentBuilder().build();
 
         intent.close();
