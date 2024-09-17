@@ -1,4 +1,4 @@
-# Dapp API
+# Crypto Exchange API
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=AbrSantiago_unq-dapp-crypto-exchange&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=AbrSantiago_unq-dapp-crypto-exchange)
 
@@ -16,3 +16,19 @@ Este proyecto es un MVP (Minimum Viable Product) para un sistema de intercambio 
 - Informes de volumen operado de criptoactivos entre dos fechas.
 - APIs documentadas con Swagger.
 - Aplicación stateless.
+
+---
+## Entrega Nro 1
+
+| Entregable | Estado |
+|------------|--------|
+| Creación de repositorio GitHub | 🟢     |
+| Configuración en GitHubActions | 🟢     |
+| Build corriendo y SUCCESS | 🟢     |
+| SonarCloud (Registrar el proyecto Backend) | 🟢     |
+| TAG en GitHub y Confeccionar Release Notes | 🟢     |
+| Clean Code según la materia (todo en Inglés) | 🟢     |
+| Configuración de Swagger en el back-API (v3) | 🟢     |
+| Implementar modelo completo | 🟢     |
+| Testing automático unitario | 🟢     |
+| Proveer servicio de registración de usuario (punto 1) | 🟢     |
