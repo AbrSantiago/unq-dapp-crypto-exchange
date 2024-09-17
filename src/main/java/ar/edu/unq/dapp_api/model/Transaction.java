@@ -1,5 +1,7 @@
 package ar.edu.unq.dapp_api.model;
 
+import ar.edu.unq.dapp_api.exception.InvalidTransactionStateException;
+import ar.edu.unq.dapp_api.exception.TransactionCompletedException;
 import ar.edu.unq.dapp_api.model.enums.IntentionType;
 import ar.edu.unq.dapp_api.model.enums.TransactionStatus;
 import lombok.Getter;
@@ -29,7 +31,7 @@ public class Transaction {
         if (this.status.equals(TransactionStatus.PENDING)) {
             this.status = TransactionStatus.TRANSFERRED;
         } else {
-            throw new IllegalArgumentException("Transaction already completed");
+            throw new TransactionCompletedException("Transaction already completed");
         }
     }
 
@@ -41,7 +43,7 @@ public class Transaction {
             this.buyer.addPoints(points);
             this.operationIntent.close();
         } else {
-            throw new IllegalArgumentException("Transaction already completed");
+            throw new InvalidTransactionStateException("Transaction cannot be confirmed because it is not transferred");
         }
     }
 
