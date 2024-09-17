@@ -1,7 +1,9 @@
 package ar.edu.unq.dapp_api.model;
 
+import ar.edu.unq.dapp_api.exception.InvalidTransactionStateException;
 import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 import ar.edu.unq.dapp_api.model.enums.IntentionType;
+import ar.edu.unq.dapp_api.model.enums.TransactionStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -91,12 +93,18 @@ public class User {
     }
 
     public void cancelTransaction(Transaction transaction) {
+        if (transaction.getStatus().equals(TransactionStatus.CONFIRMED) || transaction.getStatus().equals(TransactionStatus.TRANSFERRED)) {
+            throw new InvalidTransactionStateException("Cannot cancel a transaction that is already confirmed or transferred");
+        }
         transaction.cancelTransaction();
         this.discountPoints(transaction.cancelByUserPoints());
     }
 
     public void discountPoints(int points) {
-        pointsObtained -= points;
+        if (this.pointsObtained - points < 0) {
+            throw new IllegalArgumentException("Points cannot be negative");
+        }
+        this.pointsObtained -= points;
     }
 
     public void addPoints(int points) {
