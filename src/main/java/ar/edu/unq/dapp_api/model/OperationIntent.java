@@ -1,5 +1,6 @@
 package ar.edu.unq.dapp_api.model;
 
+import ar.edu.unq.dapp_api.exception.IllegalOperationException;
 import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 import ar.edu.unq.dapp_api.model.enums.IntentionType;
 import ar.edu.unq.dapp_api.model.enums.OperationStatus;
@@ -31,6 +32,9 @@ public class OperationIntent {
     }
 
     public Transaction generateTransaction(User interestedUser, Double currentPrice) {
+        if (this.status.equals(OperationStatus.CLOSED)) {
+            throw new IllegalOperationException("Cannot generate transaction from closed operation intent");
+        }
         if (interestedUser.getId().equals(this.getUser().getId())) {
             throw new IllegalArgumentException("User cannot buy/sell to himself");
         }
