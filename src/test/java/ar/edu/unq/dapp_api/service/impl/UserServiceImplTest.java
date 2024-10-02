@@ -1,10 +1,8 @@
 package ar.edu.unq.dapp_api.service.impl;
 
-import ar.edu.unq.dapp_api.dto.RegisterUserDTO;
 import ar.edu.unq.dapp_api.exception.UserAlreadyExistsException;
 import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.repositories.UserRepository;
-import ar.edu.unq.dapp_api.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

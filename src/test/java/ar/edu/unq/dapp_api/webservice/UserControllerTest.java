@@ -1,84 +1,79 @@
 package ar.edu.unq.dapp_api.webservice;
 
-import ar.edu.unq.dapp_api.exception.GlobalExceptionHandler;
+import ar.edu.unq.dapp_api.exception.UserAlreadyExistsException;
 import ar.edu.unq.dapp_api.model.User;
-import ar.edu.unq.dapp_api.repositories.UserRepository;
+import ar.edu.unq.dapp_api.service.UserService;
+import ar.edu.unq.dapp_api.webservice.dto.RegisterUserDTO;
+import ar.edu.unq.dapp_api.webservice.dto.UserDTO;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.http.HttpStatus;
+import static org.mockito.Mockito.*;
+import org.springframework.http.ResponseEntity;
 
-import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UserControllerTest {
 
-//    private MockMvc mockMvc;
-//
-//    @Mock
-//    private UserRepository userRepository;
-//
-//    @InjectMocks
-//    private UserController userController;
-//
-//    @BeforeEach
-//    void setUp() {
-//        MockitoAnnotations.openMocks(this);
-//        mockMvc = MockMvcBuilders.standaloneSetup(userController)
-//                .setControllerAdvice(new GlobalExceptionHandler())
-//                .build();
-//    }
-//
-//    @Test
-//    void createUserShouldReturnCreatedWhenUserIsSuccessfullyCreated() throws Exception {
-//        User user = new User("john.doe@example.com", "12345678", "John", "Doe", "123 Main St", "SecurePass1!", "1234567890123456789012");
-//        when(userRepository.save(any(User.class))).thenReturn(user);
-//
-//        mockMvc.perform(post("/users")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content("{\"name\":\"John\",\"surname\":\"Doe\",\"email\":\"john.doe@example.com\",\"address\":\"123 Main St\",\"password\":\"SecurePass1!\",\"cvu\":\"1234567890123456789012\",\"walletAddress\":\"12345678\",\"pointsObtained\":0,\"operationsPerformed\":0}"))
-//                .andExpect(status().isCreated())
-//                .andExpect(content().json("{\"name\":\"John\",\"surname\":\"Doe\",\"email\":\"john.doe@example.com\",\"address\":\"123 Main St\",\"password\":\"SecurePass1!\",\"cvu\":\"1234567890123456789012\",\"walletAddress\":\"12345678\",\"pointsObtained\":0,\"operationsPerformed\":0}"));
-//    }
-//
-//    @Test
-//    void createUserShouldReturnConflictWhenEmailCVUOrWalletAddressAlreadyExists() throws Exception {
-//        when(userRepository.save(any(User.class))).thenThrow(new DataIntegrityViolationException("Duplicate entry"));
-//
-//        mockMvc.perform(post("/users")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content("{\"name\":\"John\",\"surname\":\"Doe\",\"email\":\"john.doe@example.com\",\"address\":\"123 Main St\",\"password\":\"SecurePass1!\",\"cvu\":\"1234567890123456789012\",\"walletAddress\":\"12345678\",\"pointsObtained\":0,\"operationsPerformed\":0}"))
-//                .andExpect(status().isConflict())
-//                .andExpect(content().string("A user with the same email, CVU, or wallet address already exists."));
-//    }
-//
-//    @Test
-//    void getAllUsersShouldReturnOkWithEmptyListWhenNoUsersExist() throws Exception {
-//        when(userRepository.findAll()).thenReturn(Collections.emptyList());
-//
-//        mockMvc.perform(get("/users"))
-//                .andExpect(status().isOk())
-//                .andExpect(content().json("[]"));
-//    }
-//
-//    @Test
-//    void getAllUsersShouldReturnOkWithListOfUsersWhenUsersExist() throws Exception {
-//        User user = new User("john.doe@example.com", "12345678", "John", "Doe", "123 Main St", "SecurePass1!", "1234567890123456789012");
-//        when(userRepository.findAll()).thenReturn(Collections.singletonList(user));
-//
-//        mockMvc.perform(get("/users"))
-//                .andExpect(status().isOk())
-//                .andExpect(content().json("[{\"name\":\"John\",\"surname\":\"Doe\",\"email\":\"john.doe@example.com\",\"address\":\"123 Main St\",\"password\":\"SecurePass1!\",\"cvu\":\"1234567890123456789012\",\"walletAddress\":\"12345678\",\"pointsObtained\":0,\"operationsPerformed\":0}]"));
-//    }
+    @Mock
+    private UserService userService;
+
+    @InjectMocks
+    private UserController userController;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void testGetAllUsers_ReturnsListOfUsers() {
+        User mockUser = new User();
+        when(userService.getAllUsers()).thenReturn(List.of(mockUser));
+
+        ResponseEntity<List<User>> response = userController.getAllUsers();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(1, response.getBody().size());
+        assertEquals(mockUser, response.getBody().getFirst());
+    }
+
+    @Test
+    void testCreateUser_Success() throws Exception {
+        RegisterUserDTO dto = new RegisterUserDTO();
+        User user = new User();
+        user.setName("Test User");
+        user.setEmail("test@example.com");
+
+        when(userService.registerUser(dto)).thenReturn(user);
+
+        ResponseEntity<Object> response = userController.createUser(dto);
+
+        UserDTO responseBody = (UserDTO) response.getBody();
+        assertEquals("Test User", responseBody.getName());
+        assertEquals("test@example.com", responseBody.getEmail());
+
+        verify(userService, times(1)).registerUser(dto);
+    }
+
+
+    @Test
+    void testCreateUser_UserAlreadyExistsException() {
+        RegisterUserDTO registerUserDTO = new RegisterUserDTO();
+        when(userService.registerUser(registerUserDTO)).thenThrow(new UserAlreadyExistsException("User already exists"));
+
+        ResponseEntity<Object> response = userController.createUser(registerUserDTO);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("User already exists", response.getBody());
+    }
+
 }

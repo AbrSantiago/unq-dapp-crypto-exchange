@@ -1,7 +1,7 @@
 package ar.edu.unq.dapp_api.webservice;
 
-import ar.edu.unq.dapp_api.dto.RegisterUserDTO;
-import ar.edu.unq.dapp_api.dto.UserDTO;
+import ar.edu.unq.dapp_api.webservice.dto.RegisterUserDTO;
+import ar.edu.unq.dapp_api.webservice.dto.UserDTO;
 import ar.edu.unq.dapp_api.exception.UserAlreadyExistsException;
 import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.service.UserService;
@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -32,12 +33,12 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createUser(@Valid @RequestBody RegisterUserDTO simpleUser) {
+    public ResponseEntity<Object> createUser(@Valid @RequestBody RegisterUserDTO simpleUser) {
         try {
-            User user = userService.registerUser(simpleUser.toModel());
+            User user = userService.registerUser(simpleUser);
             return ResponseEntity.ok(new UserDTO(user));
         } catch (UserAlreadyExistsException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: User already exists. " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (ConstraintViolationException e) {
             String details = e.getConstraintViolations().stream()
                     .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
