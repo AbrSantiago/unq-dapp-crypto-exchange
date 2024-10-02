@@ -5,8 +5,6 @@ import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.service.UserService;
 import ar.edu.unq.dapp_api.webservice.dto.RegisterUserDTO;
 import ar.edu.unq.dapp_api.webservice.dto.UserDTO;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,7 +15,7 @@ import static org.mockito.Mockito.*;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -42,12 +40,12 @@ class UserControllerTest {
         ResponseEntity<List<User>> response = userController.getAllUsers();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(1, response.getBody().size());
+        assertEquals(1, Objects.requireNonNull(response.getBody()).size());
         assertEquals(mockUser, response.getBody().getFirst());
     }
 
     @Test
-    void testCreateUser_Success() throws Exception {
+    void testCreateUser_Success() {
         RegisterUserDTO dto = new RegisterUserDTO();
         User user = new User();
         user.setName("Test User");
@@ -58,6 +56,7 @@ class UserControllerTest {
         ResponseEntity<Object> response = userController.createUser(dto);
 
         UserDTO responseBody = (UserDTO) response.getBody();
+        assert responseBody != null;
         assertEquals("Test User", responseBody.getName());
         assertEquals("test@example.com", responseBody.getEmail());
 
