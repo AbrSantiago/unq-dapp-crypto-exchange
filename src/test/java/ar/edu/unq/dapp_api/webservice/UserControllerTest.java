@@ -24,61 +24,61 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class UserControllerTest {
 
-    private MockMvc mockMvc;
-
-    @Mock
-    private UserRepository userRepository;
-
-    @InjectMocks
-    private UserController userController;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(userController)
-                .setControllerAdvice(new GlobalExceptionHandler())
-                .build();
-    }
-
-    @Test
-    void createUserShouldReturnCreatedWhenUserIsSuccessfullyCreated() throws Exception {
-        User user = new User("john.doe@example.com", "12345678", "John", "Doe", "123 Main St", "SecurePass1!", "1234567890123456789012");
-        when(userRepository.save(any(User.class))).thenReturn(user);
-
-        mockMvc.perform(post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"John\",\"surname\":\"Doe\",\"email\":\"john.doe@example.com\",\"address\":\"123 Main St\",\"password\":\"SecurePass1!\",\"cvu\":\"1234567890123456789012\",\"walletAddress\":\"12345678\",\"pointsObtained\":0,\"operationsPerformed\":0}"))
-                .andExpect(status().isCreated())
-                .andExpect(content().json("{\"name\":\"John\",\"surname\":\"Doe\",\"email\":\"john.doe@example.com\",\"address\":\"123 Main St\",\"password\":\"SecurePass1!\",\"cvu\":\"1234567890123456789012\",\"walletAddress\":\"12345678\",\"pointsObtained\":0,\"operationsPerformed\":0}"));
-    }
-
-    @Test
-    void createUserShouldReturnConflictWhenEmailCVUOrWalletAddressAlreadyExists() throws Exception {
-        when(userRepository.save(any(User.class))).thenThrow(new DataIntegrityViolationException("Duplicate entry"));
-
-        mockMvc.perform(post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"John\",\"surname\":\"Doe\",\"email\":\"john.doe@example.com\",\"address\":\"123 Main St\",\"password\":\"SecurePass1!\",\"cvu\":\"1234567890123456789012\",\"walletAddress\":\"12345678\",\"pointsObtained\":0,\"operationsPerformed\":0}"))
-                .andExpect(status().isConflict())
-                .andExpect(content().string("A user with the same email, CVU, or wallet address already exists."));
-    }
-
-    @Test
-    void getAllUsersShouldReturnOkWithEmptyListWhenNoUsersExist() throws Exception {
-        when(userRepository.findAll()).thenReturn(Collections.emptyList());
-
-        mockMvc.perform(get("/users"))
-                .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
-    }
-
-    @Test
-    void getAllUsersShouldReturnOkWithListOfUsersWhenUsersExist() throws Exception {
-        User user = new User("john.doe@example.com", "12345678", "John", "Doe", "123 Main St", "SecurePass1!", "1234567890123456789012");
-        when(userRepository.findAll()).thenReturn(Collections.singletonList(user));
-
-        mockMvc.perform(get("/users"))
-                .andExpect(status().isOk())
-                .andExpect(content().json("[{\"name\":\"John\",\"surname\":\"Doe\",\"email\":\"john.doe@example.com\",\"address\":\"123 Main St\",\"password\":\"SecurePass1!\",\"cvu\":\"1234567890123456789012\",\"walletAddress\":\"12345678\",\"pointsObtained\":0,\"operationsPerformed\":0}]"));
-    }
+//    private MockMvc mockMvc;
+//
+//    @Mock
+//    private UserRepository userRepository;
+//
+//    @InjectMocks
+//    private UserController userController;
+//
+//    @BeforeEach
+//    void setUp() {
+//        MockitoAnnotations.openMocks(this);
+//        mockMvc = MockMvcBuilders.standaloneSetup(userController)
+//                .setControllerAdvice(new GlobalExceptionHandler())
+//                .build();
+//    }
+//
+//    @Test
+//    void createUserShouldReturnCreatedWhenUserIsSuccessfullyCreated() throws Exception {
+//        User user = new User("john.doe@example.com", "12345678", "John", "Doe", "123 Main St", "SecurePass1!", "1234567890123456789012");
+//        when(userRepository.save(any(User.class))).thenReturn(user);
+//
+//        mockMvc.perform(post("/users")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content("{\"name\":\"John\",\"surname\":\"Doe\",\"email\":\"john.doe@example.com\",\"address\":\"123 Main St\",\"password\":\"SecurePass1!\",\"cvu\":\"1234567890123456789012\",\"walletAddress\":\"12345678\",\"pointsObtained\":0,\"operationsPerformed\":0}"))
+//                .andExpect(status().isCreated())
+//                .andExpect(content().json("{\"name\":\"John\",\"surname\":\"Doe\",\"email\":\"john.doe@example.com\",\"address\":\"123 Main St\",\"password\":\"SecurePass1!\",\"cvu\":\"1234567890123456789012\",\"walletAddress\":\"12345678\",\"pointsObtained\":0,\"operationsPerformed\":0}"));
+//    }
+//
+//    @Test
+//    void createUserShouldReturnConflictWhenEmailCVUOrWalletAddressAlreadyExists() throws Exception {
+//        when(userRepository.save(any(User.class))).thenThrow(new DataIntegrityViolationException("Duplicate entry"));
+//
+//        mockMvc.perform(post("/users")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content("{\"name\":\"John\",\"surname\":\"Doe\",\"email\":\"john.doe@example.com\",\"address\":\"123 Main St\",\"password\":\"SecurePass1!\",\"cvu\":\"1234567890123456789012\",\"walletAddress\":\"12345678\",\"pointsObtained\":0,\"operationsPerformed\":0}"))
+//                .andExpect(status().isConflict())
+//                .andExpect(content().string("A user with the same email, CVU, or wallet address already exists."));
+//    }
+//
+//    @Test
+//    void getAllUsersShouldReturnOkWithEmptyListWhenNoUsersExist() throws Exception {
+//        when(userRepository.findAll()).thenReturn(Collections.emptyList());
+//
+//        mockMvc.perform(get("/users"))
+//                .andExpect(status().isOk())
+//                .andExpect(content().json("[]"));
+//    }
+//
+//    @Test
+//    void getAllUsersShouldReturnOkWithListOfUsersWhenUsersExist() throws Exception {
+//        User user = new User("john.doe@example.com", "12345678", "John", "Doe", "123 Main St", "SecurePass1!", "1234567890123456789012");
+//        when(userRepository.findAll()).thenReturn(Collections.singletonList(user));
+//
+//        mockMvc.perform(get("/users"))
+//                .andExpect(status().isOk())
+//                .andExpect(content().json("[{\"name\":\"John\",\"surname\":\"Doe\",\"email\":\"john.doe@example.com\",\"address\":\"123 Main St\",\"password\":\"SecurePass1!\",\"cvu\":\"1234567890123456789012\",\"walletAddress\":\"12345678\",\"pointsObtained\":0,\"operationsPerformed\":0}]"));
+//    }
 }

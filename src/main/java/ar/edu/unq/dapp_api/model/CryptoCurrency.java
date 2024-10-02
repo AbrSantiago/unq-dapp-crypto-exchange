@@ -1,6 +1,8 @@
 package ar.edu.unq.dapp_api.model;
 
 import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
@@ -8,10 +10,12 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Builder
+@Entity
 public class CryptoCurrency implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    @Id
     private CryptoSymbol symbol;
     private Float price;
     private String lastUpdateDateAndTime;

@@ -1,49 +1,48 @@
 package ar.edu.unq.dapp_api.webservice;
 
 import ar.edu.unq.dapp_api.dto.RegisterUserDTO;
-import ar.edu.unq.dapp_api.exception.DuplicateResourceException;
+import ar.edu.unq.dapp_api.dto.UserDTO;
+import ar.edu.unq.dapp_api.exception.UserAlreadyExistsException;
 import ar.edu.unq.dapp_api.model.User;
-import ar.edu.unq.dapp_api.repositories.UserRepository;
+import ar.edu.unq.dapp_api.service.UserService;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(@Valid @RequestBody RegisterUserDTO simpleUser) {
-        User user = new User(
-                simpleUser.getEmail(),
-                simpleUser.getWalletAddress(),
-                simpleUser.getName(),
-                simpleUser.getSurname(),
-                simpleUser.getAddress(),
-                simpleUser.getPassword(),
-                simpleUser.getCvu()
-        );
+    public ResponseEntity<?> createUser(@Valid @RequestBody RegisterUserDTO simpleUser) {
         try {
-            return userRepository.save(user);
-        } catch (DataIntegrityViolationException e) {
-            throw new DuplicateResourceException("A user with the same email, CVU, or wallet address already exists.");
+            User user = userService.registerUser(simpleUser.toModel());
+            return ResponseEntity.ok(new UserDTO(user));
+        } catch (UserAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: User already exists. " + e.getMessage());
+        } catch (ConstraintViolationException e) {
+            String details = e.getConstraintViolations().stream()
+                    .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
+                    .collect(Collectors.joining(", "));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Validation failed: " + details);
         }
     }
 }
