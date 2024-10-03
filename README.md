@@ -40,7 +40,7 @@ Este proyecto es un MVP (Minimum Viable Product) para un sistema de intercambio 
 | Estado de build en "Verde" | 🟢     |
 | Utilizar HSQLDB para persistir datos (opcion H2) | 🟢     |
 | Crear datos de prueba cuando levanta la aplicación | 🟢     |
-| Documentation de Endpoints (APIs) con Swagger (v3) | 🟢     |
+| Documentation de Endpoints (APIs) con Swagger (v3) |       |
 | TAG en GitHub y Confeccionar Release Notes de entrega 2 |       |
 | Implementar JOB de Coverage | 🟢     |
 | Listar cotizacion de criptoactivos | 🟢     |
