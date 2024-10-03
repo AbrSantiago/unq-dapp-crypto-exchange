@@ -24,19 +24,31 @@ public class CryptoServiceImpl implements CryptoService {
         this.cryptoRepository = cryptoRepository;
     }
 
+//    @Override
+//    public CryptoCurrencyList getAllCryptoCurrencyValues() {
+//        CryptoCurrencyList list = new CryptoCurrencyList();
+//        for (CryptoSymbol crypto : CryptoSymbol.values()) {
+//            CryptoCurrency entity = binanceProxyService.getCryptoCurrencyValue(crypto.name());
+//
+//            if (entity != null) {
+//                entity.setLastUpdateDateAndTime(LocalTime.now());
+//            }
+//            list.addCrypto(entity);
+//        }
+//        cryptoRepository.saveAll(list.getCryptos());
+//        return list;
+//    }
+
     @Override
     public CryptoCurrencyList getAllCryptoCurrencyValues() {
-        CryptoCurrencyList list = new CryptoCurrencyList();
-        for (CryptoSymbol crypto : CryptoSymbol.values()) {
-            CryptoCurrency entity = binanceProxyService.getCryptoCurrencyValue(crypto.name());
+        CryptoCurrencyList cryptoList = binanceProxyService.getAllCryptoCurrencyValue();
 
-            if (entity != null) {
-                entity.setLastUpdateDateAndTime(LocalTime.now());
-            }
-            list.addCrypto(entity);
+        for(CryptoCurrency crypto : cryptoList.getCryptos()) {
+            crypto.setLastUpdateDateAndTime(LocalTime.now());
         }
-        cryptoRepository.saveAll(list.getCryptos());
-        return list;
+
+        cryptoRepository.saveAll(cryptoList.getCryptos());
+        return cryptoList;
     }
 
     @Override
