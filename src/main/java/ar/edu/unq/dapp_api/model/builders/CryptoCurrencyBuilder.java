@@ -3,10 +3,12 @@ package ar.edu.unq.dapp_api.model.builders;
 import ar.edu.unq.dapp_api.model.CryptoCurrency;
 import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 
+import java.time.LocalTime;
+
 public class CryptoCurrencyBuilder {
     private CryptoSymbol symbol = CryptoSymbol.BTCUSDT;
     private float price = 50000.0f;
-    private String lastUpdateDateAndTime = "2023-10-01T10:00:00";
+    private LocalTime lastUpdateDateAndTime = LocalTime.of(12, 0);
 
     public CryptoCurrencyBuilder withSymbol(CryptoSymbol symbol) {
         this.symbol = symbol;
@@ -18,7 +20,7 @@ public class CryptoCurrencyBuilder {
         return this;
     }
 
-    public CryptoCurrencyBuilder withLastUpdateDateAndTime(String lastUpdateDateAndTime) {
+    public CryptoCurrencyBuilder withLastUpdateDateAndTime(LocalTime lastUpdateDateAndTime) {
         this.lastUpdateDateAndTime = lastUpdateDateAndTime;
         return this;
     }

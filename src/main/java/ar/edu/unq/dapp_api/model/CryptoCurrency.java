@@ -6,7 +6,7 @@ import jakarta.persistence.Id;
 import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
-
+import java.time.LocalTime;
 @Getter
 @Setter
 @Builder
@@ -18,11 +18,11 @@ public class CryptoCurrency implements Serializable {
     @Id
     private CryptoSymbol symbol;
     private Float price;
-    private String lastUpdateDateAndTime;
+    private LocalTime lastUpdateDateAndTime;
 
     public CryptoCurrency() {}
 
-    public CryptoCurrency(CryptoSymbol symbol, Float price, String lastUpdateDateAndTime) {
+    public CryptoCurrency(CryptoSymbol symbol, Float price, LocalTime lastUpdateDateAndTime) {
         this.symbol = symbol;
         this.price = price;
         this.lastUpdateDateAndTime = lastUpdateDateAndTime;

@@ -9,6 +9,10 @@ import java.util.List;
 public class CryptoCurrencyList {
     private final List<CryptoCurrency> cryptos;
 
+    public CryptoCurrencyList(List<CryptoCurrency> cryptoCurrencies) {
+        this.cryptos = new ArrayList<>();
+    }
+
     public CryptoCurrencyList() {
         this.cryptos = new ArrayList<>();
     }
