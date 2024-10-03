@@ -9,6 +9,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,16 +20,17 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final Validator validator;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, Validator validator) {
+    public UserServiceImpl(UserRepository userRepository, Validator validator, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.validator = validator;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public User registerUser(RegisterUserDTO registerUserDTO) {
-
         Set<ConstraintViolation<RegisterUserDTO>> violations = validator.validate(registerUserDTO);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
@@ -38,9 +40,12 @@ public class UserServiceImpl implements UserService {
             throw new UserAlreadyExistsException("User already exists");
         }
 
+        registerUserDTO.setPassword(passwordEncoder.encode(registerUserDTO.getPassword()));
+
         User user = registerUserDTO.toModel();
         return userRepository.save(user);
     }
+
 
     @Override
     public List<User> getAllUsers() {

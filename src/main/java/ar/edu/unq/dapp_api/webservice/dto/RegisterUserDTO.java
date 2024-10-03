@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class RegisterUserDTO {
@@ -34,6 +35,7 @@ public class RegisterUserDTO {
     @NotBlank
     private String walletAddress;
 
+    @Setter
     @Size(min = 6, max = 30)
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\W).+$", message = "Password must contain at least one uppercase letter, one lowercase letter, and one special character")
     private String password;
@@ -54,4 +56,5 @@ public class RegisterUserDTO {
     public User toModel() {
         return new User(email, walletAddress, name, surname, address, password, cvu);
     }
+
 }

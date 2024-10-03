@@ -38,8 +38,6 @@ public class User {
     @NotBlank
     private String address;
 
-    @Size(min = 6, max = 30)
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\W).+$", message = "Password must contain at least one uppercase letter, one lowercase letter, and one special character")
     private String password;
 
     @Size(min = 22, max = 22)

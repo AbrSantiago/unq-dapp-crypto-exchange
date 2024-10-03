@@ -33,16 +33,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Object> createUser(@Valid @RequestBody RegisterUserDTO simpleUser) {
-        try {
-            User user = userService.registerUser(simpleUser);
-            return ResponseEntity.ok(new UserDTO(user));
-        } catch (UserAlreadyExistsException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (ConstraintViolationException e) {
-            String details = e.getConstraintViolations().stream()
-                    .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
-                    .collect(Collectors.joining(", "));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Validation failed: " + details);
-        }
+        User user = userService.registerUser(simpleUser);
+        return ResponseEntity.ok(new UserDTO(user));
     }
 }
