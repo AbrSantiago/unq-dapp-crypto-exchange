@@ -58,7 +58,6 @@ public class User {
     private int operationsPerformed;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private List<OperationIntent> userOperationIntents = new ArrayList<>();
 
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
