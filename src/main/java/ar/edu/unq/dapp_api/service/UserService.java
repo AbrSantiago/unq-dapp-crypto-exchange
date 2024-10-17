@@ -1,7 +1,7 @@
 package ar.edu.unq.dapp_api.service;
 
 import ar.edu.unq.dapp_api.model.User;
-import ar.edu.unq.dapp_api.webservice.dto.RegisterUserDTO;
+import ar.edu.unq.dapp_api.webservice.dto.user.RegisterUserDTO;
 
 
 import java.util.List;

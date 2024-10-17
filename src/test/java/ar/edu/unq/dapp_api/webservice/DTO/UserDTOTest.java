@@ -1,7 +1,7 @@
 package ar.edu.unq.dapp_api.webservice.DTO;
 
 import ar.edu.unq.dapp_api.model.User;
-import ar.edu.unq.dapp_api.webservice.dto.UserDTO;
+import ar.edu.unq.dapp_api.webservice.dto.user.UserDTO;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

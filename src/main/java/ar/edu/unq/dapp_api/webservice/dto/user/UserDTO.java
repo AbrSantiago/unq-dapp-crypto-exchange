@@ -1,4 +1,4 @@
-package ar.edu.unq.dapp_api.webservice.dto;
+package ar.edu.unq.dapp_api.webservice.dto.user;
 
 import ar.edu.unq.dapp_api.model.User;
 import lombok.Getter;
