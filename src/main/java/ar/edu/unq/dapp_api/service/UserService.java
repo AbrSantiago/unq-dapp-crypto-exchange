@@ -9,4 +9,5 @@ import java.util.List;
 public interface UserService {
     User registerUser(RegisterUserDTO registerUserDTO);
     List<User> getAllUsers();
+    User getUserById(Long userId);
 }

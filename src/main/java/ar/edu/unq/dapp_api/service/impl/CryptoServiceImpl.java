@@ -38,6 +38,9 @@ public class CryptoServiceImpl implements CryptoService {
 
     @Override
     public CryptoCurrency getCryptoCurrencyValue(String symbol) {
-        return null;
+        CryptoCurrency crypto = binanceProxyService.getCryptoCurrencyValue(symbol);
+        crypto.setLastUpdateDateAndTime(LocalTime.now());
+        cryptoRepository.save(crypto);
+        return crypto;
     }
 }

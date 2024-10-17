@@ -4,6 +4,7 @@ import ar.edu.unq.dapp_api.exception.InvalidTransactionStateException;
 import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 import ar.edu.unq.dapp_api.model.enums.IntentionType;
 import ar.edu.unq.dapp_api.model.enums.TransactionStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -56,8 +57,16 @@ public class User {
     @NotNull
     private int operationsPerformed;
 
-    @Transient
-    private List<OperationIntent> userOperationIntents;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<OperationIntent> userOperationIntents = new ArrayList<>();
+
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transaction> sellerTransactions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transaction> buyerTransactions = new ArrayList<>();
+
 
     public User(String email, String walletAddress, String name, String surname, String address, String password, String cvu) {
         this.email = email;
@@ -76,7 +85,7 @@ public class User {
         this.userOperationIntents = new ArrayList<>();
     }
 
-    public OperationIntent publishOperationIntent(CryptoSymbol symbol, Long cryptoAmount, Long cryptoPrice, Long operationARSAmount, IntentionType type) {
+    public OperationIntent publishOperationIntent(CryptoSymbol symbol, Long cryptoAmount, Float cryptoPrice, Long operationARSAmount, IntentionType type) {
         OperationIntent operationIntent = new OperationIntent(symbol, cryptoAmount, cryptoPrice, operationARSAmount, this, type);
         userOperationIntents.add(operationIntent);
         return operationIntent;

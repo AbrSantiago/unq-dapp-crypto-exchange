@@ -8,7 +8,7 @@ import ar.edu.unq.dapp_api.model.enums.IntentionType;
 public class OperationIntentBuilder {
     private CryptoSymbol symbol = CryptoSymbol.BTCUSDT;
     private Long cryptoAmount = 1L;
-    private Long cryptoPrice = 50000L;
+    private Float cryptoPrice = 50000F;
     private Long operationARSAmount = 50000L;
     private User user = new UserBuilder().withId(1L).build();
     private IntentionType type = IntentionType.BUY;
@@ -23,7 +23,7 @@ public class OperationIntentBuilder {
         return this;
     }
 
-    public OperationIntentBuilder withCryptoPrice(Long cryptoPrice) {
+    public OperationIntentBuilder withCryptoPrice(Float cryptoPrice) {
         this.cryptoPrice = cryptoPrice;
         return this;
     }

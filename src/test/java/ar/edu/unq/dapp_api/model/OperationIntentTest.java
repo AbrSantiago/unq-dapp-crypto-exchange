@@ -17,7 +17,7 @@ class OperationIntentTest {
     @Test
     void constructorInitializesFieldsCorrectly() {
         User user = new UserBuilder().withId(1L).build();
-        OperationIntent intent = new OperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000L, 50000L, user, IntentionType.BUY);
+        OperationIntent intent = new OperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000F, 50000L, user, IntentionType.BUY);
 
         assertEquals(CryptoSymbol.BTCUSDT, intent.getSymbol());
         assertEquals(1L, intent.getCryptoAmount());
@@ -33,7 +33,7 @@ class OperationIntentTest {
     void generateTransactionCreatesTransactionForBuyIntention() {
         User user = new UserBuilder().withId(1L).build();
         User interestedUser = new UserBuilder().withId(2L).build();
-        OperationIntent intent = new OperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000L, 50000L, user, IntentionType.BUY);
+        OperationIntent intent = new OperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000F, 50000L, user, IntentionType.BUY);
 
         Transaction transaction = intent.generateTransaction(interestedUser, 50000.0);
 
@@ -46,7 +46,7 @@ class OperationIntentTest {
     void generateTransactionCreatesTransactionForSellIntention() {
         User user = new UserBuilder().withId(1L).build();
         User interestedUser = new UserBuilder().withId(2L).build();
-        OperationIntent intent = new OperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000L, 50000L, user, IntentionType.SELL);
+        OperationIntent intent = new OperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000F, 50000L, user, IntentionType.SELL);
 
         Transaction transaction = intent.generateTransaction(interestedUser, 50000.0);
 
@@ -58,7 +58,7 @@ class OperationIntentTest {
     @Test
     void generateTransactionThrowsExceptionWhenUserIsSame() {
         User user = new UserBuilder().withId(1L).build();
-        OperationIntent intent = new OperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000L, 50000L, user, IntentionType.BUY);
+        OperationIntent intent = new OperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000F, 50000L, user, IntentionType.BUY);
 
         assertThrows(IllegalArgumentException.class, () -> intent.generateTransaction(user, 50000.0));
     }
@@ -66,7 +66,7 @@ class OperationIntentTest {
     @Test
     void generateTransactionCancelsTransactionWhenPriceIsTooLow() {
         User interestedUser = new UserBuilder().withId(2L).build();
-        OperationIntent intent = new OperationIntentBuilder().withCryptoPrice(50000L).build();
+        OperationIntent intent = new OperationIntentBuilder().withCryptoPrice(50000F).build();
 
         Transaction transaction = intent.generateTransaction(interestedUser, 47000.0);
 
@@ -76,7 +76,7 @@ class OperationIntentTest {
     @Test
     void generateTransactionCancelsTransactionWhenPriceIsTooHigh() {
         User interestedUser = new UserBuilder().withId(2L).build();
-        OperationIntent intent = new OperationIntentBuilder().withCryptoPrice(50000L).build();
+        OperationIntent intent = new OperationIntentBuilder().withCryptoPrice(50000F).build();
 
         Transaction transaction = intent.generateTransaction(interestedUser, 53000.0);
 

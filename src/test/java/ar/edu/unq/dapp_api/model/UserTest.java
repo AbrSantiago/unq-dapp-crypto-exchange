@@ -98,7 +98,7 @@ class UserTest {
     @Test
     void publishOperationIntentAddsIntentToUser() {
         User user = new UserBuilder().build();
-        OperationIntent intent = user.publishOperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000L, 50000L, IntentionType.BUY);
+        OperationIntent intent = user.publishOperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000F, 50000L, IntentionType.BUY);
 
         assertNotNull(intent);
         assertEquals(1, user.getUserOperationIntents().size());

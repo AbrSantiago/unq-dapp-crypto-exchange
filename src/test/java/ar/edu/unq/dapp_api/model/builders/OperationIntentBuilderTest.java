@@ -29,7 +29,7 @@ class OperationIntentBuilderTest {
         OperationIntent intent = new OperationIntentBuilder()
                 .withSymbol(CryptoSymbol.ETHUSDT)
                 .withCryptoAmount(2L)
-                .withCryptoPrice(3000L)
+                .withCryptoPrice(50000F)
                 .withOperationARSAmount(6000L)
                 .withUser(user)
                 .withType(IntentionType.SELL)
@@ -38,7 +38,7 @@ class OperationIntentBuilderTest {
         assertNotNull(intent);
         assertEquals(CryptoSymbol.ETHUSDT, intent.getSymbol());
         assertEquals(2L, intent.getCryptoAmount());
-        assertEquals(3000L, intent.getCryptoPrice());
+        assertEquals(50000F, intent.getCryptoPrice());
         assertEquals(6000L, intent.getOperationARSAmount());
         assertEquals(user, intent.getUser());
         assertEquals(IntentionType.SELL, intent.getType());
@@ -50,7 +50,7 @@ class OperationIntentBuilderTest {
         OperationIntentBuilder builder = new OperationIntentBuilder()
                 .withSymbol(CryptoSymbol.ETHUSDT)
                 .withCryptoAmount(2L)
-                .withCryptoPrice(3000L)
+                .withCryptoPrice(50000F)
                 .withOperationARSAmount(6000L)
                 .withUser(user)
                 .withType(null);

@@ -4,6 +4,7 @@ import ar.edu.unq.dapp_api.exception.InvalidTransactionStateException;
 import ar.edu.unq.dapp_api.exception.TransactionCompletedException;
 import ar.edu.unq.dapp_api.model.enums.IntentionType;
 import ar.edu.unq.dapp_api.model.enums.TransactionStatus;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,13 +12,28 @@ import java.time.Duration;
 import java.time.LocalTime;
 
 @Getter
+@Entity
 public class Transaction {
-    private final OperationIntent operationIntent;
-    private final User seller;
-    private final User buyer;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToOne
+    @JoinColumn(name = "operation_intent_id", nullable = false)
+    private OperationIntent operationIntent;
+
+    @ManyToOne
+    @JoinColumn(name = "seller_id", nullable = false)
+    private User seller;
+
+    @ManyToOne
+    @JoinColumn(name = "buyer_id", nullable = false)
+    private User buyer;
+
     @Setter
     private TransactionStatus status;
-    private final LocalTime startTime;
+    private LocalTime startTime;
 
     public Transaction(OperationIntent operationIntent, User seller, User buyer) {
         this.operationIntent = operationIntent;
@@ -25,6 +41,10 @@ public class Transaction {
         this.buyer = buyer;
         this.status = TransactionStatus.PENDING;
         this.startTime = LocalTime.now();
+    }
+
+    public Transaction() {
+
     }
 
     public void completeTransfer() {
