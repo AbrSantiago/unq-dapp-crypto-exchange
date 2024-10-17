@@ -28,7 +28,6 @@ public class OperationIntent {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore
     private User user;
 
     @OneToOne(mappedBy = "operationIntent", cascade = CascadeType.ALL, orphanRemoval = true)

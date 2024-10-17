@@ -4,13 +4,16 @@ import ar.edu.unq.dapp_api.model.OperationIntent;
 import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 import ar.edu.unq.dapp_api.model.enums.IntentionType;
+import ar.edu.unq.dapp_api.model.enums.OperationStatus;
 import ar.edu.unq.dapp_api.repositories.OperationIntentRepository;
 import ar.edu.unq.dapp_api.service.CryptoService;
 import ar.edu.unq.dapp_api.service.OperationIntentService;
 import ar.edu.unq.dapp_api.service.UserService;
-import ar.edu.unq.dapp_api.webservice.dto.NewOperationIntentDTO;
+import ar.edu.unq.dapp_api.webservice.dto.operationIntent.NewOperationIntentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class OperationIntentServiceImpl implements OperationIntentService {
@@ -39,5 +42,10 @@ public class OperationIntentServiceImpl implements OperationIntentService {
         operationIntentRepository.save(operationIntent);
 
         return operationIntent;
+    }
+
+    @Override
+    public List<OperationIntent> getActivesOperationIntents() {
+        return operationIntentRepository.findActivesOperationIntents(OperationStatus.OPEN);
     }
 }
