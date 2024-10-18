@@ -10,4 +10,6 @@ public interface OperationIntentService {
     OperationIntent createOperationIntent(Long userId, NewOperationIntentDTO newOperationIntentDTO);
 
     List<OperationIntent> getActivesOperationIntents();
+
+    OperationIntent getOperationIntentById(Long operationIntentId);
 }

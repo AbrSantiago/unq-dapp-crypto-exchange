@@ -1,5 +1,6 @@
 package ar.edu.unq.dapp_api.service.impl;
 
+import ar.edu.unq.dapp_api.exception.OperationNotFoundException;
 import ar.edu.unq.dapp_api.model.OperationIntent;
 import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
@@ -55,6 +56,11 @@ public class OperationIntentServiceImpl implements OperationIntentService {
     @Override
     public List<OperationIntent> getActivesOperationIntents() {
         return operationIntentRepository.findActivesOperationIntents(OperationStatus.OPEN);
+    }
+
+    @Override
+    public OperationIntent getOperationIntentById(Long operationIntentId) {
+        return operationIntentRepository.findById(operationIntentId).orElseThrow(() -> new OperationNotFoundException("Operation intent not found"));
     }
 
 }

@@ -35,7 +35,7 @@ class OperationIntentTest {
         User interestedUser = new UserBuilder().withId(2L).build();
         OperationIntent intent = new OperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000F, 50000L, user, IntentionType.BUY);
 
-        Transaction transaction = intent.generateTransaction(interestedUser, 50000.0);
+        Transaction transaction = intent.generateTransaction(interestedUser, 50000.0f);
 
         assertNotNull(transaction);
         assertEquals(user, transaction.getBuyer());
@@ -48,7 +48,7 @@ class OperationIntentTest {
         User interestedUser = new UserBuilder().withId(2L).build();
         OperationIntent intent = new OperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000F, 50000L, user, IntentionType.SELL);
 
-        Transaction transaction = intent.generateTransaction(interestedUser, 50000.0);
+        Transaction transaction = intent.generateTransaction(interestedUser, 50000.0f);
 
         assertNotNull(transaction);
         assertEquals(user, transaction.getSeller());
@@ -60,7 +60,7 @@ class OperationIntentTest {
         User user = new UserBuilder().withId(1L).build();
         OperationIntent intent = new OperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000F, 50000L, user, IntentionType.BUY);
 
-        assertThrows(IllegalArgumentException.class, () -> intent.generateTransaction(user, 50000.0));
+        assertThrows(IllegalArgumentException.class, () -> intent.generateTransaction(user, 50000.0f));
     }
 
     @Test
@@ -68,7 +68,7 @@ class OperationIntentTest {
         User interestedUser = new UserBuilder().withId(2L).build();
         OperationIntent intent = new OperationIntentBuilder().withCryptoPrice(50000F).build();
 
-        Transaction transaction = intent.generateTransaction(interestedUser, 47000.0);
+        Transaction transaction = intent.generateTransaction(interestedUser, 47000.0f);
 
         assertEquals(TransactionStatus.CANCELLED, transaction.getStatus());
     }
@@ -78,7 +78,7 @@ class OperationIntentTest {
         User interestedUser = new UserBuilder().withId(2L).build();
         OperationIntent intent = new OperationIntentBuilder().withCryptoPrice(50000F).build();
 
-        Transaction transaction = intent.generateTransaction(interestedUser, 53000.0);
+        Transaction transaction = intent.generateTransaction(interestedUser, 50000.0f);
 
         assertEquals(TransactionStatus.CANCELLED, transaction.getStatus());
     }
@@ -102,7 +102,7 @@ class OperationIntentTest {
         when(transaction.getStatus()).thenReturn(TransactionStatus.TRANSFERRED);
 
 
-        intent.generateTransaction(interestedUser, 53000.0);
+        intent.generateTransaction(interestedUser, 53000.0f);
 
         assertEquals(OperationStatus.CLOSED, intent.getStatus());
     }

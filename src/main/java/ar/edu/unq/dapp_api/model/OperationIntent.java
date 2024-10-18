@@ -51,7 +51,7 @@ public class OperationIntent {
     }
 
 
-    public Transaction generateTransaction(User interestedUser, Double currentPrice) {
+    public Transaction generateTransaction(User interestedUser, Float currentPrice) {
         if (this.status.equals(OperationStatus.CLOSED)) {
             throw new IllegalOperationException("Cannot generate transaction from closed operation intent");
         }
@@ -67,13 +67,13 @@ public class OperationIntent {
         return transaction;
     }
 
-    private void validateTransaction(Double currentPrice) {
+    private void validateTransaction(Float currentPrice) {
         if (checkCancelTransaction(currentPrice)) {
                 this.transaction.cancelTransaction();
         }
     }
 
-    private boolean checkCancelTransaction(Double currentPrice) {
+    private boolean checkCancelTransaction(Float currentPrice) {
         return this.cryptoPrice < (currentPrice - currentPrice * 0.05) || this.cryptoPrice > (currentPrice + currentPrice * 0.05);
     }
 
