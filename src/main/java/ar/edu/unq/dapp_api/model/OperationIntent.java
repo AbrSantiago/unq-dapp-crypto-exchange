@@ -7,6 +7,7 @@ import ar.edu.unq.dapp_api.model.enums.OperationStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,9 +19,10 @@ public class OperationIntent {
     private Long id;
 
     private CryptoSymbol symbol;
-    private Long cryptoAmount;
-    private Float cryptoPrice;
-    private Long operationARSAmount;
+
+    private BigDecimal cryptoAmount;
+    private BigDecimal cryptoPrice;
+    private BigDecimal operationARSAmount;
     private IntentionType type;
     private LocalDateTime dateTime;
     private OperationStatus status;
@@ -32,9 +34,7 @@ public class OperationIntent {
     @OneToOne(mappedBy = "operationIntent", cascade = CascadeType.ALL, orphanRemoval = true)
     private Transaction transaction;
 
-
-
-    public OperationIntent(CryptoSymbol symbol, Long cryptoAmount, Float cryptoPrice, Long operationARSAmount, User user, IntentionType type) {
+    public OperationIntent(CryptoSymbol symbol, BigDecimal cryptoAmount, BigDecimal cryptoPrice, BigDecimal operationARSAmount, User user, IntentionType type) {
         this.symbol = symbol;
         this.cryptoAmount = cryptoAmount;
         this.cryptoPrice = cryptoPrice;
@@ -46,11 +46,9 @@ public class OperationIntent {
     }
 
     public OperationIntent() {
-
     }
 
-
-    public Transaction generateTransaction(User interestedUser, Float currentPrice) {
+    public Transaction generateTransaction(User interestedUser, BigDecimal currentPrice) {
         if (this.status.equals(OperationStatus.CLOSED)) {
             throw new IllegalOperationException("Cannot generate transaction from closed operation intent");
         }
@@ -66,18 +64,19 @@ public class OperationIntent {
         return transaction;
     }
 
-    private void validateTransaction(Float currentPrice) {
+    private void validateTransaction(BigDecimal currentPrice) {
         if (checkCancelTransaction(currentPrice)) {
-                this.transaction.cancelTransaction();
+            this.transaction.cancelTransaction();
         }
     }
 
-    private boolean checkCancelTransaction(Float currentPrice) {
-        return this.cryptoPrice < (currentPrice - currentPrice * 0.05) || this.cryptoPrice > (currentPrice + currentPrice * 0.05);
+    private boolean checkCancelTransaction(BigDecimal currentPrice) {
+        BigDecimal lowerBound = currentPrice.subtract(currentPrice.multiply(BigDecimal.valueOf(0.05)));
+        BigDecimal upperBound = currentPrice.add(currentPrice.multiply(BigDecimal.valueOf(0.05)));
+        return this.cryptoPrice.compareTo(lowerBound) < 0 || this.cryptoPrice.compareTo(upperBound) > 0;
     }
 
     public void close() {
         this.status = OperationStatus.CLOSED;
     }
-
 }

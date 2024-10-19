@@ -15,6 +15,7 @@ import ar.edu.unq.dapp_api.service.integration.DollarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -37,14 +38,16 @@ public class OperationIntentServiceImpl implements OperationIntentService {
     public OperationIntent createOperationIntent(Long userId, NewOperationIntentDTO newOperationIntentDTO) {
         CryptoSymbol symbol = newOperationIntentDTO.getSymbol();
         IntentionType type = newOperationIntentDTO.getType();
-        Long cryptoAmount = newOperationIntentDTO.getCryptoAmount();
-        Float cryptoPrice = cryptoService.getCryptoCurrencyValue(symbol.toString()).getPrice();
+        BigDecimal cryptoAmount = newOperationIntentDTO.getCryptoAmount();
+        BigDecimal cryptoPrice = cryptoService.getCryptoCurrencyValue(symbol.toString()).getPrice();
 
-        Double dollarValue = type == IntentionType.BUY
+        BigDecimal dollarValue = type == IntentionType.BUY
                 ? dollarService.getDollarBuyValue()
                 : dollarService.getDollarSellValue();
 
-        Long operationARSAmount = Math.round(cryptoAmount * cryptoPrice * dollarValue);
+        BigDecimal operationARSAmount = cryptoAmount
+                .multiply(cryptoPrice)
+                .multiply(dollarValue);
         User user = userService.getUserById(userId);
 
         OperationIntent operationIntent = new OperationIntent(symbol, cryptoAmount, cryptoPrice, operationARSAmount, user, type);

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 @Service
@@ -15,16 +16,24 @@ public class DollarService {
     private String dollarApiURL;
 
 
-    public Double getDollarSellValue() {
+    public BigDecimal getDollarSellValue() {
         Map<String, Object> response = restTemplate.getForObject(dollarApiURL, Map.class);
 
-        return response != null ? ((Number) response.get("venta")).doubleValue() : null;
+        if (response != null && response.containsKey("venta")) {
+            return BigDecimal.valueOf(((Number) response.get("venta")).doubleValue());
+        }
+
+        return null;
     }
 
-    public Double getDollarBuyValue() {
+    public BigDecimal getDollarBuyValue() {
         Map<String, Object> response = restTemplate.getForObject(dollarApiURL, Map.class);
 
-        return response != null ? ((Number) response.get("compra")).doubleValue() : null;
+        if (response != null && response.containsKey("compra")) {
+            return BigDecimal.valueOf(((Number) response.get("compra")).doubleValue());
+        }
+
+        return null;
     }
 }
 

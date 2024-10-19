@@ -13,6 +13,8 @@ import ar.edu.unq.dapp_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
@@ -33,7 +35,7 @@ public class TransactionServiceImpl implements TransactionService {
     public Transaction createTransaction(Long userId, Long operationIntentId) {
         User interestedUser = userService.getUserById(userId);
         OperationIntent operationIntent = operationIntentService.getOperationIntentById(operationIntentId);
-        Float currentPrice = cryptoService.getCryptoCurrencyValue(operationIntent.getSymbol().toString()).getPrice();
+        BigDecimal currentPrice = cryptoService.getCryptoCurrencyValue(operationIntent.getSymbol().toString()).getPrice();
         Transaction transaction = operationIntent.generateTransaction(interestedUser, currentPrice);
         transactionRepository.save(transaction);
 

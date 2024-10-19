@@ -5,19 +5,21 @@ import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 import ar.edu.unq.dapp_api.model.enums.IntentionType;
 import lombok.Getter;
 
+import java.math.BigDecimal;
+
 @Getter
 public class ExpressedOperationIntentDTO {
 
     private final Long id;
     private final CryptoSymbol symbol;
-    private final Long cryptoAmount;
-    private final Float cryptoPrice;
-    private final Long operationARSAmount;
+    private final BigDecimal cryptoAmount;
+    private final BigDecimal cryptoPrice;
+    private final BigDecimal operationARSAmount;
     private final String userName;
     private final String userSurname;
     private final IntentionType type;
 
-    ExpressedOperationIntentDTO(Long id, CryptoSymbol symbol, Long cryptoAmount, Float cryptoPrice, Long operationARSAmount, String userName, String userSurname, IntentionType type) {
+    ExpressedOperationIntentDTO(Long id, CryptoSymbol symbol, BigDecimal cryptoAmount, BigDecimal cryptoPrice, BigDecimal operationARSAmount, String userName, String userSurname, IntentionType type) {
         this.id = id;
         this.symbol = symbol;
         this.cryptoAmount = cryptoAmount;

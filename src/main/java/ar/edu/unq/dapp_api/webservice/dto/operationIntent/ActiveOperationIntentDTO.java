@@ -4,6 +4,7 @@ import ar.edu.unq.dapp_api.model.OperationIntent;
 import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 import lombok.Getter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -13,15 +14,15 @@ public class ActiveOperationIntentDTO {
     private Long id;
     private LocalDateTime dateTime;
     private CryptoSymbol symbol;
-    private Long cryptoAmount;
-    private Float cryptoPrice;
-    private Long operationARSAmount;
+    private BigDecimal cryptoAmount;
+    private BigDecimal cryptoPrice;
+    private BigDecimal operationARSAmount;
     private String userName;
     private String userSurname;
     private int userAmountOfOperations;
     private int userReputation;
 
-    public ActiveOperationIntentDTO(Long id, LocalDateTime startTime, CryptoSymbol symbol, Long cryptoAmount, Float cryptoPrice, Long operationARSAmount, String userName, String userSurname, int userAmountOfOperations, int userReputation) {
+    public ActiveOperationIntentDTO(Long id, LocalDateTime startTime, CryptoSymbol symbol, BigDecimal cryptoAmount, BigDecimal cryptoPrice, BigDecimal operationARSAmount, String userName, String userSurname, int userAmountOfOperations, int userReputation) {
         this.id = id;
         this.dateTime = startTime;
         this.symbol = symbol;

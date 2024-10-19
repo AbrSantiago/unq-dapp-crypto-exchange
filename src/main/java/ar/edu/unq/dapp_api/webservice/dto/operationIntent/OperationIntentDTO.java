@@ -9,6 +9,7 @@ import ar.edu.unq.dapp_api.webservice.dto.transaction.TransactionDTO;
 import ar.edu.unq.dapp_api.webservice.dto.user.SimpleUserDTO;
 import lombok.Getter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,16 +18,16 @@ public class OperationIntentDTO {
 
     private Long id;
     private CryptoSymbol symbol;
-    private Long cryptoAmount;
-    private Float cryptoPrice;
-    private Long operationARSAmount;
+    private BigDecimal cryptoAmount;
+    private BigDecimal cryptoPrice;
+    private BigDecimal operationARSAmount;
     private IntentionType type;
     private LocalDateTime dateTime;
     private OperationStatus status;
     private Long transactionId;
     private SimpleUserDTO user;
 
-    public OperationIntentDTO(Long id, CryptoSymbol symbol, Long cryptoAmount, Float cryptoPrice, Long operationARSAmount, IntentionType type, LocalDateTime dateTime, OperationStatus status, Long transactionId, SimpleUserDTO user) {
+    public OperationIntentDTO(Long id, CryptoSymbol symbol, BigDecimal cryptoAmount, BigDecimal cryptoPrice, BigDecimal operationARSAmount, IntentionType type, LocalDateTime dateTime, OperationStatus status, Long transactionId, SimpleUserDTO user) {
         this.id = id;
         this.symbol = symbol;
         this.cryptoAmount = cryptoAmount;

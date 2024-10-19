@@ -10,6 +10,7 @@ import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +85,7 @@ public class User {
         this.userOperationIntents = new ArrayList<>();
     }
 
-    public OperationIntent publishOperationIntent(CryptoSymbol symbol, Long cryptoAmount, Float cryptoPrice, Long operationARSAmount, IntentionType type) {
+    public OperationIntent publishOperationIntent(CryptoSymbol symbol, BigDecimal cryptoAmount, BigDecimal cryptoPrice, BigDecimal operationARSAmount, IntentionType type) {
         OperationIntent operationIntent = new OperationIntent(symbol, cryptoAmount, cryptoPrice, operationARSAmount, this, type);
         userOperationIntents.add(operationIntent);
         return operationIntent;
@@ -102,14 +103,18 @@ public class User {
         if (transaction.getStatus().equals(TransactionStatus.CONFIRMED) || transaction.getStatus().equals(TransactionStatus.TRANSFERRED)) {
             throw new InvalidTransactionStateException("Cannot cancel a transaction that is already confirmed or transferred");
         }
+        if (transaction.getStatus().equals(TransactionStatus.CANCELLED)) {
+            throw new InvalidTransactionStateException("Transaction already canceled");
+        }
         transaction.cancelTransaction();
         this.discountPoints(transaction.cancelByUserPoints());
     }
 
     public void discountPoints(int points) {
-        if (this.pointsObtained >= points) {
+        if (this.pointsObtained - points == 0) {
             this.setPointsObtained(0);
-        } else {
+        }
+        else {
             this.setPointsObtained(this.pointsObtained - points);
         }
     }
@@ -123,9 +128,9 @@ public class User {
     }
 
     public int getReputation() {
-        if (operationsPerformed == 0) {
+        if (operationsPerformed == 0 || pointsObtained == 0) {
             return 0;
         }
-        return pointsObtained / operationsPerformed;
+        else return pointsObtained / operationsPerformed;
     }
 }

@@ -6,13 +6,15 @@ import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 import ar.edu.unq.dapp_api.model.enums.TransactionStatus;
 import lombok.Getter;
 
+import java.math.BigDecimal;
+
 @Getter
 public class ProcessedTransactionDTO {
 
     private final Long id;
     private final CryptoSymbol symbol;
-    private final Long cryptoAmount;
-    private final Float cryptoPrice;
+    private final BigDecimal cryptoAmount;
+    private final BigDecimal cryptoPrice;
     private final String userName;
     private final String userSurname;
     private final int userAmountOfOperations;
@@ -20,7 +22,7 @@ public class ProcessedTransactionDTO {
     private final String sendDirection;
     private final TransactionStatus action;
 
-    public ProcessedTransactionDTO(Long id, CryptoSymbol symbol, Long cryptoAmount, Float cryptoPrice, String userName, String userSurname, int userAmountOfOperations, int userReputation, String sendDirection, TransactionStatus action) {
+    public ProcessedTransactionDTO(Long id, CryptoSymbol symbol, BigDecimal cryptoAmount, BigDecimal cryptoPrice, String userName, String userSurname, int userAmountOfOperations, int userReputation, String sendDirection, TransactionStatus action) {
         if (id == null || symbol == null || cryptoAmount == null || cryptoPrice == null || userName == null || userSurname == null || sendDirection == null || action == null) {
             throw new IllegalArgumentException("None of the parameters can be null");
         }
