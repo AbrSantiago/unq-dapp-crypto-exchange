@@ -1,7 +1,11 @@
 package ar.edu.unq.dapp_api.webservice.dto.user;
 
 import ar.edu.unq.dapp_api.model.User;
+import ar.edu.unq.dapp_api.webservice.dto.operationIntent.OperationIntentDTO;
+import ar.edu.unq.dapp_api.webservice.dto.transaction.TransactionDTO;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 public class UserDTO {
@@ -15,6 +19,9 @@ public class UserDTO {
     private String walletAddress;
     private int pointsObtained;
     private int operationsPerformed;
+    private List<OperationIntentDTO> operationIntents;
+    private List<TransactionDTO> sellTransactions;
+    private List<TransactionDTO> buyTransactions;
 
     public UserDTO(User user) {
         this.id = user.getId();
@@ -27,6 +34,17 @@ public class UserDTO {
         this.walletAddress = user.getWalletAddress();
         this.pointsObtained = user.getPointsObtained();
         this.operationsPerformed = user.getOperationsPerformed();
+        this.operationIntents = user.getUserOperationIntents().stream()
+                .map(OperationIntentDTO::fromModel)
+                .toList();
+
+        this.sellTransactions = user.getSellerTransactions().stream()
+                .map(TransactionDTO::fromModel)
+                .toList();
+
+        this.buyTransactions = user.getBuyerTransactions().stream()
+                .map(TransactionDTO::fromModel)
+                .toList();
     }
 
     public User toModel() {

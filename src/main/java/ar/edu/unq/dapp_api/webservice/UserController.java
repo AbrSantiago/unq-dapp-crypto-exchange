@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,9 +24,15 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        List<UserDTO> userDTOs = new ArrayList<>();
+
+        users.forEach(user -> userDTOs.add(UserDTO.fromUser(user)));
+
+        return ResponseEntity.ok(userDTOs);
     }
+
 
     @PostMapping
     public ResponseEntity<Object> createUser(@Valid @RequestBody RegisterUserDTO simpleUser) {

@@ -107,13 +107,16 @@ public class User {
     }
 
     public void discountPoints(int points) {
-        if (this.pointsObtained - points < 0) {
-            throw new IllegalArgumentException("Points cannot be negative");
+        if (this.pointsObtained >= points) {
+            this.pointsObtained -= points;
         }
-        this.pointsObtained -= points;
     }
 
     public void addPoints(int points) {
         pointsObtained += points;
+    }
+
+    public void addOperation() {
+        operationsPerformed++;
     }
 }

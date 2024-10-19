@@ -60,7 +60,9 @@ public class Transaction {
             this.status = TransactionStatus.CONFIRMED;
             int points = this.calculatePoints();
             this.seller.addPoints(points);
+            this.seller.addOperation();
             this.buyer.addPoints(points);
+            this.buyer.addOperation();
             this.operationIntent.close();
         } else {
             throw new InvalidTransactionStateException("Transaction cannot be confirmed because it is not transferred");

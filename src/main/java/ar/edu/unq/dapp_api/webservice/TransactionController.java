@@ -1,7 +1,12 @@
 package ar.edu.unq.dapp_api.webservice;
 
+import ar.edu.unq.dapp_api.model.Transaction;
+import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.service.TransactionService;
+import ar.edu.unq.dapp_api.service.UserService;
 import ar.edu.unq.dapp_api.webservice.dto.transaction.NewTransactionDTO;
+import ar.edu.unq.dapp_api.webservice.dto.transaction.ProcessedTransactionDTO;
+import ar.edu.unq.dapp_api.webservice.dto.transaction.TransactionActionDTO;
 import ar.edu.unq.dapp_api.webservice.dto.transaction.TransactionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,9 +20,11 @@ import org.springframework.web.bind.annotation.*;
 public class TransactionController {
 
     private final TransactionService transactionService;
+    private final UserService userService;
 
-    public TransactionController(TransactionService transactionService) {
+    public TransactionController(TransactionService transactionService, UserService userService) {
         this.transactionService = transactionService;
+        this.userService = userService;
     }
 
     @Operation(summary = "Create a new transaction")
@@ -27,6 +34,13 @@ public class TransactionController {
         return ResponseEntity.ok(transaction);
     }
 
-
+    @Operation(summary = "Proccess an action in the transaction")
+    @PostMapping("/process/{transactionId}")
+    public ResponseEntity<ProcessedTransactionDTO> processTransaction(@PathVariable Long transactionId, @Valid @RequestBody TransactionActionDTO transactionActionDTO) {
+        User user = userService.getUserById(transactionActionDTO.getUserId());
+        Transaction transaction = transactionService.processTransaction(transactionId, transactionActionDTO.getUserId() ,transactionActionDTO.getAction());
+        ProcessedTransactionDTO transactionDTO = ProcessedTransactionDTO.fromModel(transaction, user);
+        return ResponseEntity.ok(transactionDTO);
+    }
 
 }
