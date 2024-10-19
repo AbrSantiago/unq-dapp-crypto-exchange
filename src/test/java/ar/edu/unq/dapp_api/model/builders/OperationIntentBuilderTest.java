@@ -6,6 +6,8 @@ import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 import ar.edu.unq.dapp_api.model.enums.IntentionType;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class OperationIntentBuilderTest {
@@ -16,9 +18,9 @@ class OperationIntentBuilderTest {
 
         assertNotNull(intent);
         assertEquals(CryptoSymbol.BTCUSDT, intent.getSymbol());
-        assertEquals(1L, intent.getCryptoAmount());
-        assertEquals(50000L, intent.getCryptoPrice());
-        assertEquals(50000L, intent.getOperationARSAmount());
+        assertEquals(1L, intent.getCryptoAmount().longValue()); // Assuming cryptoAmount is BigDecimal
+        assertEquals(50000L, intent.getCryptoPrice().longValue()); // Assuming cryptoPrice is BigDecimal
+        assertEquals(50000L, intent.getOperationARSAmount().longValue()); // Assuming operationARSAmount is BigDecimal
         assertNotNull(intent.getUser());
         assertEquals(IntentionType.BUY, intent.getType());
     }
@@ -28,18 +30,18 @@ class OperationIntentBuilderTest {
         User user = new UserBuilder().withId(1L).build();
         OperationIntent intent = new OperationIntentBuilder()
                 .withSymbol(CryptoSymbol.ETHUSDT)
-                .withCryptoAmount(2L)
-                .withCryptoPrice(50000F)
-                .withOperationARSAmount(6000L)
+                .withCryptoAmount(new BigDecimal("2")) // Use BigDecimal
+                .withCryptoPrice(new BigDecimal("50000.00")) // Use BigDecimal
+                .withOperationARSAmount(new BigDecimal("6000.00")) // Use BigDecimal
                 .withUser(user)
                 .withType(IntentionType.SELL)
                 .build();
 
         assertNotNull(intent);
         assertEquals(CryptoSymbol.ETHUSDT, intent.getSymbol());
-        assertEquals(2L, intent.getCryptoAmount());
-        assertEquals(50000F, intent.getCryptoPrice());
-        assertEquals(6000L, intent.getOperationARSAmount());
+        assertEquals(0, new BigDecimal("2").compareTo(intent.getCryptoAmount())); // Compare BigDecimals
+        assertEquals(0, new BigDecimal("50000.00").compareTo(intent.getCryptoPrice())); // Compare BigDecimals
+        assertEquals(0, new BigDecimal("6000.00").compareTo(intent.getOperationARSAmount())); // Compare BigDecimals
         assertEquals(user, intent.getUser());
         assertEquals(IntentionType.SELL, intent.getType());
     }
@@ -49,9 +51,9 @@ class OperationIntentBuilderTest {
         User user = new UserBuilder().withId(1L).build();
         OperationIntentBuilder builder = new OperationIntentBuilder()
                 .withSymbol(CryptoSymbol.ETHUSDT)
-                .withCryptoAmount(2L)
-                .withCryptoPrice(50000F)
-                .withOperationARSAmount(6000L)
+                .withCryptoAmount(new BigDecimal("2")) // Use BigDecimal
+                .withCryptoPrice(new BigDecimal("50000.00")) // Use BigDecimal
+                .withOperationARSAmount(new BigDecimal("6000.00")) // Use BigDecimal
                 .withUser(user)
                 .withType(null);
 

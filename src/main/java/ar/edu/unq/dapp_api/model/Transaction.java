@@ -90,4 +90,8 @@ public class Transaction {
     public int cancelByUserPoints() {
         return 20;
     }
+
+    public boolean isCanceled() {
+        return this.status.equals(TransactionStatus.CANCELLED);
+    }
 }

@@ -13,6 +13,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -111,12 +112,7 @@ public class User {
     }
 
     public void discountPoints(int points) {
-        if (this.pointsObtained - points == 0) {
-            this.setPointsObtained(0);
-        }
-        else {
-            this.setPointsObtained(this.pointsObtained - points);
-        }
+        this.setPointsObtained(Math.max(this.pointsObtained - points, 0));
     }
 
     public void addPoints(int points) {
@@ -132,5 +128,17 @@ public class User {
             return 0;
         }
         else return pointsObtained / operationsPerformed;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

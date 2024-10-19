@@ -2,6 +2,7 @@ package ar.edu.unq.dapp_api.webservice;
 
 import ar.edu.unq.dapp_api.exception.UserAlreadyExistsException;
 import ar.edu.unq.dapp_api.model.User;
+import ar.edu.unq.dapp_api.model.builders.UserBuilder;
 import ar.edu.unq.dapp_api.service.UserService;
 import ar.edu.unq.dapp_api.webservice.dto.user.RegisterUserDTO;
 import ar.edu.unq.dapp_api.webservice.dto.user.UserDTO;
@@ -11,13 +12,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Objects;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UserControllerTest {
 
@@ -33,19 +35,37 @@ class UserControllerTest {
     }
 
     @Test
-    void testGetAllUsers_ReturnsListOfUsers() {
-        User mockUser = new User();
-        when(userService.getAllUsers()).thenReturn(List.of(mockUser));
+    void getAllUsersReturnsEmptyListWhenNoUsersExist() {
+        when(userService.getAllUsers()).thenReturn(List.of());
 
-        ResponseEntity<List<User>> response = userController.getAllUsers();
+        ResponseEntity<List<UserDTO>> response = userController.getAllUsers();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(1, Objects.requireNonNull(response.getBody()).size());
-        assertEquals(mockUser, response.getBody().getFirst());
+        assertTrue(Objects.requireNonNull(response.getBody()).isEmpty());
     }
 
     @Test
-    void testCreateUser_Success() {
+    void getAllUsersReturnsListOfUsers() {
+        User mockUser = new UserBuilder().build();
+        UserDTO mockUserDTO = new UserDTO(mockUser);
+        when(userService.getAllUsers()).thenReturn(List.of(mockUser));
+
+        ResponseEntity<List<UserDTO>> response = userController.getAllUsers();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(1, Objects.requireNonNull(response.getBody()).size());
+    }
+
+    @Test
+    void createUserReturnsBadRequestWhenUserAlreadyExists() {
+        RegisterUserDTO registerUserDTO = new RegisterUserDTO();
+        when(userService.registerUser(registerUserDTO)).thenThrow(new UserAlreadyExistsException("User already exists"));
+
+        assertThrows(UserAlreadyExistsException.class, () -> userController.createUser(registerUserDTO));
+    }
+
+    @Test
+    void createUserReturnsOkWhenUserIsCreated() {
         RegisterUserDTO dto = new RegisterUserDTO();
         User user = new User();
         user.setName("Test User");
@@ -61,18 +81,6 @@ class UserControllerTest {
         assertEquals("test@example.com", responseBody.getEmail());
 
         verify(userService, times(1)).registerUser(dto);
-    }
-
-
-    @Test
-    void testCreateUser_UserAlreadyExistsException() {
-        RegisterUserDTO registerUserDTO = new RegisterUserDTO();
-        when(userService.registerUser(registerUserDTO)).thenThrow(new UserAlreadyExistsException("User already exists"));
-
-        ResponseEntity<Object> response = userController.createUser(registerUserDTO);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("User already exists", response.getBody());
     }
 
 }

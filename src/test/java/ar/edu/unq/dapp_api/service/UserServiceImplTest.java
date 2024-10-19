@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +29,9 @@ class UserServiceImplTest {
 
     @Mock
     private Validator validator;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -45,6 +49,7 @@ class UserServiceImplTest {
         when(validator.validate(registerUserDTO)).thenReturn(Collections.emptySet());
         when(userRepository.existsByEmail(registerUserDTO.getEmail())).thenReturn(false);
         when(userRepository.save(any(User.class))).thenReturn(user);
+        when(passwordEncoder.encode(registerUserDTO.getPassword())).thenReturn("encodedPassword");
 
         User result = userService.registerUser(registerUserDTO);
 

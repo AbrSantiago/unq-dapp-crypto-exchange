@@ -64,13 +64,13 @@ public class OperationIntent {
         return transaction;
     }
 
-    private void validateTransaction(BigDecimal currentPrice) {
+    public void validateTransaction(BigDecimal currentPrice) {
         if (checkCancelTransaction(currentPrice)) {
             this.transaction.cancelTransaction();
         }
     }
 
-    private boolean checkCancelTransaction(BigDecimal currentPrice) {
+    public boolean checkCancelTransaction(BigDecimal currentPrice) {
         BigDecimal lowerBound = currentPrice.subtract(currentPrice.multiply(BigDecimal.valueOf(0.05)));
         BigDecimal upperBound = currentPrice.add(currentPrice.multiply(BigDecimal.valueOf(0.05)));
         return this.cryptoPrice.compareTo(lowerBound) < 0 || this.cryptoPrice.compareTo(upperBound) > 0;

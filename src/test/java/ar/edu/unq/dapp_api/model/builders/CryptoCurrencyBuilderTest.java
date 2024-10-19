@@ -4,6 +4,7 @@ import ar.edu.unq.dapp_api.model.CryptoCurrency;
 import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,7 +17,7 @@ class CryptoCurrencyBuilderTest {
 
         assertNotNull(cryptoCurrency);
         assertEquals(CryptoSymbol.BTCUSDT, cryptoCurrency.getSymbol());
-        assertEquals(50000.0f, cryptoCurrency.getPrice());
+        assertEquals(BigDecimal.valueOf(50000.0), cryptoCurrency.getPrice());
         assertEquals(LocalTime.of(12, 0), cryptoCurrency.getLastUpdateDateAndTime());
     }
 
@@ -24,13 +25,13 @@ class CryptoCurrencyBuilderTest {
     void buildCreatesCryptoCurrencyWithCustomValues() {
         CryptoCurrency cryptoCurrency = new CryptoCurrencyBuilder()
                 .withSymbol(CryptoSymbol.ETHUSDT)
-                .withPrice(3000.0f)
+                .withPrice(new BigDecimal("3000.00")) // Use BigDecimal instead of float
                 .withLastUpdateDateAndTime(LocalTime.of(12, 0))
                 .build();
 
         assertNotNull(cryptoCurrency);
         assertEquals(CryptoSymbol.ETHUSDT, cryptoCurrency.getSymbol());
-        assertEquals(3000.0f, cryptoCurrency.getPrice());
+        assertEquals(0, new BigDecimal("3000.00").compareTo(cryptoCurrency.getPrice())); // Compare BigDecimals
         assertEquals(LocalTime.of(12, 0), cryptoCurrency.getLastUpdateDateAndTime());
     }
 
