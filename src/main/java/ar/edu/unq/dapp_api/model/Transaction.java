@@ -7,9 +7,8 @@ import ar.edu.unq.dapp_api.model.enums.TransactionStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.Duration;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -33,19 +32,17 @@ public class Transaction {
 
     @Setter
     private TransactionStatus status;
-    private LocalTime startTime;
+    private LocalDateTime startTime;
 
     public Transaction(OperationIntent operationIntent, User seller, User buyer) {
         this.operationIntent = operationIntent;
         this.seller = seller;
         this.buyer = buyer;
         this.status = TransactionStatus.PENDING;
-        this.startTime = LocalTime.now();
+        this.startTime = LocalDateTime.now();
     }
 
-    public Transaction() {
-
-    }
+    public Transaction() {}
 
     public void completeTransfer() {
         if (this.status.equals(TransactionStatus.PENDING)) {
@@ -70,7 +67,7 @@ public class Transaction {
     }
 
     private int calculatePoints() {
-        Duration duration = Duration.between(this.startTime, LocalTime.now());
+        Duration duration = Duration.between(this.startTime, LocalDateTime.now());
         long minutes = duration.toMinutes();
         return minutes <= 30 ? 10 : 5;
     }
