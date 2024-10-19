@@ -108,7 +108,9 @@ public class User {
 
     public void discountPoints(int points) {
         if (this.pointsObtained >= points) {
-            this.pointsObtained -= points;
+            this.setPointsObtained(0);
+        } else {
+            this.setPointsObtained(this.pointsObtained - points);
         }
     }
 
@@ -118,5 +120,12 @@ public class User {
 
     public void addOperation() {
         operationsPerformed++;
+    }
+
+    public int getReputation() {
+        if (operationsPerformed == 0) {
+            return 0;
+        }
+        return pointsObtained / operationsPerformed;
     }
 }

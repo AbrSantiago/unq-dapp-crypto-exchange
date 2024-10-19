@@ -63,4 +63,9 @@ public class OperationIntentServiceImpl implements OperationIntentService {
         return operationIntentRepository.findById(operationIntentId).orElseThrow(() -> new OperationNotFoundException("Operation intent not found"));
     }
 
+    @Override
+    public List<OperationIntent> getActivesOperationIntentsFromUser(Long userId) {
+        return operationIntentRepository.findActivesOperationIntentsFromUser(userId, OperationStatus.OPEN);
+    }
+
 }

@@ -14,4 +14,6 @@ public interface OperationIntentRepository extends JpaRepository<OperationIntent
     @Query("SELECT io FROM OperationIntent io WHERE io.status = :status")
     List<OperationIntent> findActivesOperationIntents(OperationStatus status);
 
+    @Query("SELECT io FROM OperationIntent io WHERE io.user.id = :userId AND io.status = :operationStatus")
+    List<OperationIntent> findActivesOperationIntentsFromUser(Long userId, OperationStatus operationStatus);
 }

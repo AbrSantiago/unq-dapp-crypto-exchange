@@ -12,4 +12,6 @@ public interface OperationIntentService {
     List<OperationIntent> getActivesOperationIntents();
 
     OperationIntent getOperationIntentById(Long operationIntentId);
+
+    List<OperationIntent> getActivesOperationIntentsFromUser(Long userId);
 }
