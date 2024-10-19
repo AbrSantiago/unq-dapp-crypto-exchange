@@ -11,14 +11,15 @@ import ar.edu.unq.dapp_api.webservice.dto.transaction.TransactionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDateTime;
 
 @Tag(name = "Transaction services", description = "Manage transactions")
 @RestController
 @RequestMapping("/transaction")
 public class TransactionController {
-
     private final TransactionService transactionService;
     private final UserService userService;
 
@@ -34,7 +35,7 @@ public class TransactionController {
         return ResponseEntity.ok(transaction);
     }
 
-    @Operation(summary = "Proccess an action in the transaction")
+    @Operation(summary = "Process an action in the transaction")
     @PostMapping("/process/{transactionId}")
     public ResponseEntity<ProcessedTransactionDTO> processTransaction(@PathVariable Long transactionId, @Valid @RequestBody TransactionActionDTO transactionActionDTO) {
         User user = userService.getUserById(transactionActionDTO.getUserId());
@@ -43,4 +44,12 @@ public class TransactionController {
         return ResponseEntity.ok(transactionDTO);
     }
 
+    @Operation(summary = "Get volume of transactions within a date range")
+    @GetMapping("/getVolume")
+    public ResponseEntity<Integer> getVolume(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+        int volume = transactionService.getConfirmedTransactionsByDateRange(startDate, endDate);
+        return ResponseEntity.ok(volume);
+    }
 }

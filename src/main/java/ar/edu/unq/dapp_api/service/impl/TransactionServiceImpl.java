@@ -12,12 +12,11 @@ import ar.edu.unq.dapp_api.service.TransactionService;
 import ar.edu.unq.dapp_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
-
     private final TransactionRepository transactionRepository;
     private final UserService userService;
     private final OperationIntentService operationIntentService;
@@ -64,5 +63,8 @@ public class TransactionServiceImpl implements TransactionService {
         return transaction;
     }
 
-
+    @Override
+    public int getConfirmedTransactionsByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+        return transactionRepository.findConfirmedTransactionsByDateRange(startDate, endDate);
+    }
 }
