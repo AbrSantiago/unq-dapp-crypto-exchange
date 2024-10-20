@@ -58,7 +58,7 @@ class UserControllerTest {
     @Test
     void createUserReturnsBadRequestWhenUserAlreadyExists() {
         RegisterUserDTO registerUserDTO = new RegisterUserDTO();
-        when(userService.registerUser(registerUserDTO)).thenThrow(new UserAlreadyExistsException("User already exists"));
+        when(userService.registerUser(registerUserDTO)).thenThrow(new UserAlreadyExistsException());
 
         assertThrows(UserAlreadyExistsException.class, () -> userController.createUser(registerUserDTO));
     }
