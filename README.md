@@ -46,6 +46,6 @@ Este proyecto es un MVP (Minimum Viable Product) para un sistema de intercambio 
 | Listar cotizacion de criptoactivos | 🟢     |
 | Permitir que un usuario exprese su intención de compra/venta | 🟢     |
 | Construir un listado donde se muestran las intenciones activas de compra/venta | 🟢     |
-| Procesar la transacción informada por un usuario |       |
-| Informar al usuario el volumen operado de cripto activos entre dos fechas |       |
+| Procesar la transacción informada por un usuario | 🟢      |
+| Informar al usuario el volumen operado de cripto activos entre dos fechas | 🟢      |
 | Testing integral de 2 controllers (end-to-end) |       |
