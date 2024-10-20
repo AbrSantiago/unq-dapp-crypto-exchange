@@ -18,7 +18,6 @@ import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
-
     private final UserRepository userRepository;
     private final Validator validator;
     private final PasswordEncoder passwordEncoder;
@@ -36,17 +35,13 @@ public class UserServiceImpl implements UserService {
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
-
         if (userRepository.existsByEmail(registerUserDTO.getEmail())) {
-            throw new UserAlreadyExistsException("User already exists");
+            throw new UserAlreadyExistsException();
         }
-
         registerUserDTO.setPassword(passwordEncoder.encode(registerUserDTO.getPassword()));
-
         User user = registerUserDTO.toModel();
         return userRepository.save(user);
     }
-
 
     @Override
     public List<User> getAllUsers() {
