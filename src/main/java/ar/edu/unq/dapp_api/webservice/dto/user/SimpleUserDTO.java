@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 public class SimpleUserDTO {
 
-    private String name;
-    private String surname;
-    private String email;
+    private final String name;
+    private final String surname;
+    private final String email;
 
     public SimpleUserDTO(String name, String surname, String email) {
         this.name = name;
@@ -16,11 +16,10 @@ public class SimpleUserDTO {
         this.email = email;
     }
 
-    public SimpleUserDTO() {
-    }
-
     public static SimpleUserDTO fromModel(User user) {
+        if (user == null) {
+            return new SimpleUserDTO(null, null, null);
+        }
         return new SimpleUserDTO(user.getName(), user.getSurname(), user.getEmail());
     }
-
 }

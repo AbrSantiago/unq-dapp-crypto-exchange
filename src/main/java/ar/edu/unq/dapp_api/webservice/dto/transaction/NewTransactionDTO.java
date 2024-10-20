@@ -11,5 +11,4 @@ public class NewTransactionDTO {
         this.userId = userId;
         this.operationIntentId = operationIntentId;
     }
-
 }

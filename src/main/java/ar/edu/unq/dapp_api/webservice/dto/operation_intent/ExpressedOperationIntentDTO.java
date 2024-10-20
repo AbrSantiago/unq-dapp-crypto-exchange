@@ -19,7 +19,7 @@ public class ExpressedOperationIntentDTO {
     private final String userSurname;
     private final IntentionType type;
 
-    ExpressedOperationIntentDTO(Long id, CryptoSymbol symbol, BigDecimal cryptoAmount, BigDecimal cryptoPrice, BigDecimal operationARSAmount, String userName, String userSurname, IntentionType type) {
+    public ExpressedOperationIntentDTO(Long id, CryptoSymbol symbol, BigDecimal cryptoAmount, BigDecimal cryptoPrice, BigDecimal operationARSAmount, String userName, String userSurname, IntentionType type) {
         this.id = id;
         this.symbol = symbol;
         this.cryptoAmount = cryptoAmount;

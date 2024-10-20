@@ -10,18 +10,17 @@ import java.time.LocalDateTime;
 
 @Getter
 public class ActiveOperationIntentDTO {
+    private final Long id;
+    private final LocalDateTime dateTime;
+    private final CryptoSymbol symbol;
+    private final BigDecimal cryptoAmount;
+    private final BigDecimal cryptoPrice;
+    private final BigDecimal operationARSAmount;
+    private final UserAccountDTO user;
 
-    private Long id;
-    private LocalDateTime dateTime;
-    private CryptoSymbol symbol;
-    private BigDecimal cryptoAmount;
-    private BigDecimal cryptoPrice;
-    private BigDecimal operationARSAmount;
-    private UserAccountDTO user;
-
-    public ActiveOperationIntentDTO(Long id, LocalDateTime startTime, CryptoSymbol symbol, BigDecimal cryptoAmount, BigDecimal cryptoPrice, BigDecimal operationARSAmount, UserAccountDTO user) {
+    public ActiveOperationIntentDTO(Long id, LocalDateTime dateTime, CryptoSymbol symbol, BigDecimal cryptoAmount, BigDecimal cryptoPrice, BigDecimal operationARSAmount, UserAccountDTO user) {
         this.id = id;
-        this.dateTime = startTime;
+        this.dateTime = dateTime;
         this.symbol = symbol;
         this.cryptoAmount = cryptoAmount;
         this.cryptoPrice = cryptoPrice;
@@ -29,10 +28,11 @@ public class ActiveOperationIntentDTO {
         this.user = user;
     }
 
-    public ActiveOperationIntentDTO() {
-    }
-
     public static ActiveOperationIntentDTO fromModel(OperationIntent operationIntent) {
+        if (operationIntent.getUser() == null) {
+            throw new NullPointerException("User cannot be null");
+        }
+        UserAccountDTO userDTO = UserAccountDTO.fromUser(operationIntent.getUser());
         return new ActiveOperationIntentDTO(
                 operationIntent.getId(),
                 operationIntent.getDateTime(),
@@ -40,7 +40,7 @@ public class ActiveOperationIntentDTO {
                 operationIntent.getCryptoAmount(),
                 operationIntent.getCryptoPrice(),
                 operationIntent.getOperationARSAmount(),
-                UserAccountDTO.fromUser(operationIntent.getUser())
+                userDTO
         );
     }
 }

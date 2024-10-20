@@ -18,6 +18,9 @@ public class UserAccountDTO {
     }
 
     public static UserAccountDTO fromUser(User user) {
+        if (user == null) {
+            return new UserAccountDTO(null, null, 0, 0);
+        }
         return new UserAccountDTO(user.getName(), user.getSurname(), user.getOperationsPerformed(), user.getReputation());
     }
 }

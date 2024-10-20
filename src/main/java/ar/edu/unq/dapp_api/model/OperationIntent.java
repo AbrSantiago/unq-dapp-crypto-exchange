@@ -7,11 +7,13 @@ import ar.edu.unq.dapp_api.model.enums.OperationStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@Setter
 @Getter
 public class OperationIntent {
 

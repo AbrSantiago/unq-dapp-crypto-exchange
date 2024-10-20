@@ -1,4 +1,4 @@
-package ar.edu.unq.dapp_api.webservice.DTO;
+package ar.edu.unq.dapp_api.webservice.DTO.user;
 
 import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.webservice.dto.user.UserDTO;
