@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
@@ -30,18 +31,37 @@ public class TransactionController {
 
     @Operation(summary = "Create a new transaction")
     @PostMapping("/create")
-    public ResponseEntity<TransactionDTO> createTransaction(@Valid @RequestBody NewTransactionDTO newTransactionDTO) {
-        TransactionDTO transaction = TransactionDTO.fromModel(transactionService.createTransaction(newTransactionDTO.getUserId(), newTransactionDTO.getOperationIntentId()));
-        return ResponseEntity.ok(transaction);
+    public ResponseEntity<Object> createTransaction(@Valid @RequestBody NewTransactionDTO newTransactionDTO) {
+        try {
+            TransactionDTO transaction = TransactionDTO.fromModel(transactionService.createTransaction(
+                    newTransactionDTO.getUserId(),
+                    newTransactionDTO.getOperationIntentId()
+            ));
+            return ResponseEntity.ok(transaction);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error creating new transaction: " + e.getMessage());
+        }
     }
 
     @Operation(summary = "Process an action in the transaction")
     @PostMapping("/process/{transactionId}")
-    public ResponseEntity<ProcessedTransactionDTO> processTransaction(@PathVariable Long transactionId, @Valid @RequestBody TransactionActionDTO transactionActionDTO) {
-        User user = userService.getUserById(transactionActionDTO.getUserId());
-        Transaction transaction = transactionService.processTransaction(transactionId, transactionActionDTO.getUserId() ,transactionActionDTO.getAction());
-        ProcessedTransactionDTO transactionDTO = ProcessedTransactionDTO.fromModel(transaction, user);
-        return ResponseEntity.ok(transactionDTO);
+    public ResponseEntity<Object> processTransaction(
+            @PathVariable Long transactionId,
+            @Valid @RequestBody TransactionActionDTO transactionActionDTO) {
+        try {
+            User user = userService.getUserById(transactionActionDTO.getUserId());
+            Transaction transaction = transactionService.processTransaction(
+                    transactionId,
+                    transactionActionDTO.getUserId(),
+                    transactionActionDTO.getAction()
+            );
+            ProcessedTransactionDTO transactionDTO = ProcessedTransactionDTO.fromModel(transaction, user);
+            return ResponseEntity.ok(transactionDTO);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error processing a transaction: " + e.getMessage());
+        }
     }
 
     @Operation(summary = "Get volume of transactions within a date range")

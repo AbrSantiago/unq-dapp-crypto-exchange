@@ -1,6 +1,6 @@
 package ar.edu.unq.dapp_api.service.impl;
 
-import ar.edu.unq.dapp_api.exception.OperationNotFoundException;
+import ar.edu.unq.dapp_api.exception.OperationDoesNotExistException;
 import ar.edu.unq.dapp_api.exception.UserDoesNotExistException;
 import ar.edu.unq.dapp_api.model.OperationIntent;
 import ar.edu.unq.dapp_api.model.User;
@@ -65,12 +65,12 @@ public class OperationIntentServiceImpl implements OperationIntentService {
 
     @Override
     public OperationIntent getOperationIntentById(Long operationIntentId) {
-        return operationIntentRepository.findById(operationIntentId).orElseThrow(() -> new OperationNotFoundException("Operation intent not found"));
+        return operationIntentRepository.findById(operationIntentId).orElseThrow(OperationDoesNotExistException::new);
     }
 
     @Override
     public List<OperationIntent> getActivesOperationIntentsFromUser(Long userId) {
-        if(userService.getUserById(userId) == null) {
+        if (userService.getUserById(userId) == null) {
             throw new UserDoesNotExistException();
         }
         return operationIntentRepository.findActivesOperationIntentsFromUser(userId, OperationStatus.OPEN);

@@ -1,6 +1,6 @@
 package ar.edu.unq.dapp_api.service.impl;
 
-import ar.edu.unq.dapp_api.exception.TransactionNotFoundException;
+import ar.edu.unq.dapp_api.exception.*;
 import ar.edu.unq.dapp_api.model.OperationIntent;
 import ar.edu.unq.dapp_api.model.Transaction;
 import ar.edu.unq.dapp_api.model.User;
@@ -33,33 +33,35 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Transaction createTransaction(Long userId, Long operationIntentId) {
         User interestedUser = userService.getUserById(userId);
+        if(interestedUser == null) {
+            throw new UserDoesNotExistException();
+        }
         OperationIntent operationIntent = operationIntentService.getOperationIntentById(operationIntentId);
+        if (operationIntent == null) {
+            throw new OperationDoesNotExistException();
+        }
         BigDecimal currentPrice = cryptoService.getCryptoCurrencyValue(operationIntent.getSymbol().toString()).getPrice();
         Transaction transaction = operationIntent.generateTransaction(interestedUser, currentPrice);
         transactionRepository.save(transaction);
-
         return transaction;
     }
 
     @Override
     public Transaction processTransaction(Long transactionId, Long userId, TransactionStatus action) {
         if (action == null) {
-            throw new IllegalArgumentException("Action cannot be null");
+            throw new NullActionException();
         }
-
         Transaction transaction = transactionRepository.findById(transactionId)
-                .orElseThrow(() -> new TransactionNotFoundException(transactionId));
+                .orElseThrow(() -> new TransactionDoesNotExistException(transactionId));
         User user = userService.getUserById(userId);
 
         switch (action) {
             case TRANSFERRED -> user.notifySentTransaction(transaction);
             case CONFIRMED -> user.notifyReceivedTransaction(transaction);
             case CANCELLED -> user.cancelTransaction(transaction);
-            default -> throw new IllegalArgumentException("Invalid action: " + action);
+            default -> throw new InvalidActionException(action);
         }
-
         transactionRepository.save(transaction);
-
         return transaction;
     }
 
