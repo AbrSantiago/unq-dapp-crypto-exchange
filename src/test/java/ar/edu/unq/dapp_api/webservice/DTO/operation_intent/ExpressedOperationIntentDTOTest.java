@@ -6,7 +6,6 @@ import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 import ar.edu.unq.dapp_api.model.enums.IntentionType;
 import ar.edu.unq.dapp_api.webservice.dto.operation_intent.ExpressedOperationIntentDTO;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 
