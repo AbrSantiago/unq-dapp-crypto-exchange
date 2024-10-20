@@ -1,9 +1,8 @@
-package ar.edu.unq.dapp_api.service;
+package ar.edu.unq.dapp_api.service.impl;
 
 import ar.edu.unq.dapp_api.exception.UserAlreadyExistsException;
 import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.repositories.UserRepository;
-import ar.edu.unq.dapp_api.service.impl.UserServiceImpl;
 import ar.edu.unq.dapp_api.webservice.dto.user.RegisterUserDTO;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;

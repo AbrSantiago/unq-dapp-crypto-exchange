@@ -18,7 +18,7 @@ public class BinanceProxyService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Value("${integration.binance.api.url:NONE}")
-    private String binanceApiURL;
+    String binanceApiURL;
 
     public CryptoCurrency getCryptoCurrencyValue(String symbol) {
         return restTemplate.getForObject(binanceApiURL + "ticker/price?symbol=" + symbol, CryptoCurrency.class);
@@ -38,8 +38,6 @@ public class BinanceProxyService {
 
         return cryptoList;
     }
-
-
 
 
 }
