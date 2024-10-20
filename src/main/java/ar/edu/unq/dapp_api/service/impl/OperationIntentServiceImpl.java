@@ -1,6 +1,7 @@
 package ar.edu.unq.dapp_api.service.impl;
 
 import ar.edu.unq.dapp_api.exception.OperationNotFoundException;
+import ar.edu.unq.dapp_api.exception.UserDoesNotExistException;
 import ar.edu.unq.dapp_api.model.OperationIntent;
 import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
@@ -14,13 +15,11 @@ import ar.edu.unq.dapp_api.webservice.dto.operation_intent.NewOperationIntentDTO
 import ar.edu.unq.dapp_api.service.integration.DollarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.List;
 
 @Service
 public class OperationIntentServiceImpl implements OperationIntentService {
-
     private final OperationIntentRepository operationIntentRepository;
     private final UserService userService;
     private final CryptoService cryptoService;
@@ -68,7 +67,9 @@ public class OperationIntentServiceImpl implements OperationIntentService {
 
     @Override
     public List<OperationIntent> getActivesOperationIntentsFromUser(Long userId) {
+        if(userService.getUserById(userId) == null) {
+            throw new UserDoesNotExistException();
+        }
         return operationIntentRepository.findActivesOperationIntentsFromUser(userId, OperationStatus.OPEN);
     }
-
 }
