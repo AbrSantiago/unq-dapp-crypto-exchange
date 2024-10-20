@@ -2,10 +2,9 @@ package ar.edu.unq.dapp_api.webservice;
 
 import ar.edu.unq.dapp_api.model.OperationIntent;
 import ar.edu.unq.dapp_api.service.OperationIntentService;
-import ar.edu.unq.dapp_api.webservice.dto.operationIntent.ExpressedOperationIntentDTO;
-import ar.edu.unq.dapp_api.webservice.dto.operationIntent.NewOperationIntentDTO;
-import ar.edu.unq.dapp_api.webservice.dto.operationIntent.OperationIntentDTO;
-import ar.edu.unq.dapp_api.webservice.dto.operationIntent.ActiveOperationIntentDTO;
+import ar.edu.unq.dapp_api.webservice.dto.operation_intent.ExpressedOperationIntentDTO;
+import ar.edu.unq.dapp_api.webservice.dto.operation_intent.NewOperationIntentDTO;
+import ar.edu.unq.dapp_api.webservice.dto.operation_intent.ActiveOperationIntentDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

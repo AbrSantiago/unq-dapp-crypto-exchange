@@ -1,4 +1,4 @@
-package ar.edu.unq.dapp_api.webservice.dto.operationIntent;
+package ar.edu.unq.dapp_api.webservice.dto.operation_intent;
 
 import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 import ar.edu.unq.dapp_api.model.enums.IntentionType;

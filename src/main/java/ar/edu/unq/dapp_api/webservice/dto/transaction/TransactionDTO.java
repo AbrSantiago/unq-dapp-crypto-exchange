@@ -2,7 +2,7 @@ package ar.edu.unq.dapp_api.webservice.dto.transaction;
 
 import ar.edu.unq.dapp_api.model.Transaction;
 import ar.edu.unq.dapp_api.model.enums.TransactionStatus;
-import ar.edu.unq.dapp_api.webservice.dto.operationIntent.OperationIntentDTO;
+import ar.edu.unq.dapp_api.webservice.dto.operation_intent.OperationIntentDTO;
 import ar.edu.unq.dapp_api.webservice.dto.user.SimpleUserDTO;
 import lombok.Getter;
 import java.time.LocalDateTime;

@@ -47,7 +47,6 @@ class UserControllerTest {
     @Test
     void getAllUsersReturnsListOfUsers() {
         User mockUser = new UserBuilder().build();
-        UserDTO mockUserDTO = new UserDTO(mockUser);
         when(userService.getAllUsers()).thenReturn(List.of(mockUser));
 
         ResponseEntity<List<UserDTO>> response = userController.getAllUsers();

@@ -1,7 +1,7 @@
 package ar.edu.unq.dapp_api.webservice.dto.user;
 
 import ar.edu.unq.dapp_api.model.User;
-import ar.edu.unq.dapp_api.webservice.dto.operationIntent.OperationIntentDTO;
+import ar.edu.unq.dapp_api.webservice.dto.operation_intent.OperationIntentDTO;
 import ar.edu.unq.dapp_api.webservice.dto.transaction.TransactionDTO;
 import lombok.Getter;
 

@@ -1,10 +1,7 @@
 package ar.edu.unq.dapp_api.model;
 
-import ar.edu.unq.dapp_api.exception.IllegalOperationException;
 import ar.edu.unq.dapp_api.model.builders.OperationIntentBuilder;
 import ar.edu.unq.dapp_api.model.builders.UserBuilder;
-import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
-import ar.edu.unq.dapp_api.model.enums.IntentionType;
 import ar.edu.unq.dapp_api.model.enums.OperationStatus;
 import ar.edu.unq.dapp_api.model.enums.TransactionStatus;
 import org.junit.jupiter.api.BeforeEach;

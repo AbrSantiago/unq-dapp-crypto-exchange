@@ -10,7 +10,7 @@ import ar.edu.unq.dapp_api.repositories.OperationIntentRepository;
 import ar.edu.unq.dapp_api.service.CryptoService;
 import ar.edu.unq.dapp_api.service.OperationIntentService;
 import ar.edu.unq.dapp_api.service.UserService;
-import ar.edu.unq.dapp_api.webservice.dto.operationIntent.NewOperationIntentDTO;
+import ar.edu.unq.dapp_api.webservice.dto.operation_intent.NewOperationIntentDTO;
 import ar.edu.unq.dapp_api.service.integration.DollarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

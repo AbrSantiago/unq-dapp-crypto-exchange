@@ -1,4 +1,4 @@
-package ar.edu.unq.dapp_api.webservice.dto.operationIntent;
+package ar.edu.unq.dapp_api.webservice.dto.operation_intent;
 
 import ar.edu.unq.dapp_api.model.OperationIntent;
 import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
@@ -29,7 +29,6 @@ public class ExpressedOperationIntentDTO {
         this.userSurname = userSurname;
         this.type = type;
     }
-
 
     public static ExpressedOperationIntentDTO fromModel(OperationIntent operationIntent) {
         return new ExpressedOperationIntentDTO(
