@@ -35,6 +35,10 @@ public class OperationIntentServiceImpl implements OperationIntentService {
 
     @Override
     public OperationIntent createOperationIntent(Long userId, NewOperationIntentDTO newOperationIntentDTO) {
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            throw new UserDoesNotExistException();
+        }
         CryptoSymbol symbol = newOperationIntentDTO.getSymbol();
         IntentionType type = newOperationIntentDTO.getType();
         BigDecimal cryptoAmount = newOperationIntentDTO.getCryptoAmount();
@@ -47,7 +51,6 @@ public class OperationIntentServiceImpl implements OperationIntentService {
         BigDecimal operationARSAmount = cryptoAmount
                 .multiply(cryptoPrice)
                 .multiply(dollarValue);
-        User user = userService.getUserById(userId);
 
         OperationIntent operationIntent = new OperationIntent(symbol, cryptoAmount, cryptoPrice, operationARSAmount, user, type);
         operationIntentRepository.save(operationIntent);

@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,17 +28,22 @@ public class OperationIntentController {
 
     @Operation(summary = "Create a new operation intent")
     @PostMapping("/create/{userId}")
-    public ResponseEntity<ExpressedOperationIntentDTO> createOperationIntent(
+    public ResponseEntity<Object> createOperationIntent(
             @Valid @RequestBody NewOperationIntentDTO newOperationIntentDTO,
             @PathVariable Long userId) {
-        ExpressedOperationIntentDTO expressedOperationIntentDTO = ExpressedOperationIntentDTO
-                .fromModel(operationIntentService.createOperationIntent(userId, newOperationIntentDTO));
-        return ResponseEntity.ok(expressedOperationIntentDTO);
+        try {
+            ExpressedOperationIntentDTO expressedOperationIntentDTO = ExpressedOperationIntentDTO
+                    .fromModel(operationIntentService.createOperationIntent(userId, newOperationIntentDTO));
+            return ResponseEntity.ok(expressedOperationIntentDTO);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error creating new operation intent: " + e.getMessage());
+        }
     }
 
     @Operation(summary = "Get all active operation intents for a user")
     @GetMapping("/actives/{userId}")
-    public ResponseEntity<Object> getActivesOperationIntentsFromUser(@PathVariable Long userId) {
+    public ResponseEntity<Object> getActiveOperationIntentsFromUser(@PathVariable Long userId) {
         try {
             List<OperationIntent> activeUserOperationIntents = operationIntentService.getActivesOperationIntentsFromUser(userId);
             List<ActiveOperationIntentDTO> activeUserOperationIntentsDTOs = new ArrayList<>();
