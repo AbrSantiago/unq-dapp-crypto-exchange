@@ -2,84 +2,91 @@ package ar.edu.unq.dapp_api.webservice;
 
 import ar.edu.unq.dapp_api.exception.UserAlreadyExistsException;
 import ar.edu.unq.dapp_api.model.User;
-import ar.edu.unq.dapp_api.model.builders.UserBuilder;
 import ar.edu.unq.dapp_api.service.UserService;
 import ar.edu.unq.dapp_api.webservice.dto.user.RegisterUserDTO;
 import ar.edu.unq.dapp_api.webservice.dto.user.UserDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import org.springframework.http.ResponseEntity;
-
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
-class UserControllerTest {
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-    @Mock
+@WebMvcTest(UserController.class)
+public class UserControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
     private UserService userService;
 
-    @InjectMocks
-    private UserController userController;
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private RegisterUserDTO validUserDTO;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        validUserDTO = new RegisterUserDTO("test@example.com", "12345678", "John", "Doe", "123 Test St", "Passw0rd!", "1234567890123456789012");
     }
 
     @Test
-    void getAllUsersReturnsEmptyListWhenNoUsersExist() {
-        when(userService.getAllUsers()).thenReturn(List.of());
+    public void testGetAllUsers() throws Exception {
+        UserDTO userDTO1 = new UserDTO(new User("test1@example.com", "12345678", "John", "Doe", "123 Test St", "Passw0rd!", "1234567890123456789012"));
+        UserDTO userDTO2 = new UserDTO(new User("test2@example.com", "87654321", "Jane", "Doe", "456 Another St", "Password123!", "8765432198765432109876"));
 
-        ResponseEntity<List<UserDTO>> response = userController.getAllUsers();
+        List<UserDTO> users = Arrays.asList(userDTO1, userDTO2);
+        Mockito.when(userService.getAllUsers()).thenReturn(Arrays.asList(userDTO1.toModel(), userDTO2.toModel()));
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertTrue(Objects.requireNonNull(response.getBody()).isEmpty());
+        mockMvc.perform(get("/users")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].email").value("test1@example.com"))
+                .andExpect(jsonPath("$[1].email").value("test2@example.com"));
     }
 
     @Test
-    void getAllUsersReturnsListOfUsers() {
-        User mockUser = new UserBuilder().build();
-        when(userService.getAllUsers()).thenReturn(List.of(mockUser));
+    public void testCreateUser_Success() throws Exception {
+        User newUser = validUserDTO.toModel();
+        Mockito.when(userService.registerUser(any(RegisterUserDTO.class))).thenReturn(newUser);
 
-        ResponseEntity<List<UserDTO>> response = userController.getAllUsers();
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(1, Objects.requireNonNull(response.getBody()).size());
+        mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(validUserDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email").value("test@example.com"))
+                .andExpect(jsonPath("$.walletAddress").value("12345678"));
     }
 
     @Test
-    void createUserReturnsBadRequestWhenUserAlreadyExists() {
-        RegisterUserDTO registerUserDTO = new RegisterUserDTO();
-        when(userService.registerUser(registerUserDTO)).thenThrow(new UserAlreadyExistsException());
+    public void testCreateUser_UserAlreadyExists() throws Exception {
+        Mockito.when(userService.registerUser(any(RegisterUserDTO.class))).thenThrow(new UserAlreadyExistsException());
 
-        assertThrows(UserAlreadyExistsException.class, () -> userController.createUser(registerUserDTO));
+        mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(validUserDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("User already exists"));
     }
 
     @Test
-    void createUserReturnsOkWhenUserIsCreated() {
-        RegisterUserDTO dto = new RegisterUserDTO();
-        User user = new User();
-        user.setName("Test User");
-        user.setEmail("test@example.com");
+    public void testCreateUser_InvalidUserData() throws Exception {
+        RegisterUserDTO invalidUserDTO = new RegisterUserDTO("", "", "", "", "", "weakpassword", "");
 
-        when(userService.registerUser(dto)).thenReturn(user);
-
-        ResponseEntity<Object> response = userController.createUser(dto);
-
-        UserDTO responseBody = (UserDTO) response.getBody();
-        assert responseBody != null;
-        assertEquals("Test User", responseBody.getName());
-        assertEquals("test@example.com", responseBody.getEmail());
-
-        verify(userService, times(1)).registerUser(dto);
+        mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidUserDTO)))
+                .andExpect(status().isBadRequest());
     }
-
 }
