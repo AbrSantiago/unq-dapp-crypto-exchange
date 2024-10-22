@@ -13,6 +13,7 @@ import ar.edu.unq.dapp_api.service.TransactionService;
 import ar.edu.unq.dapp_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -34,7 +35,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Transaction createTransaction(Long userId, Long operationIntentId) {
         User interestedUser = userService.getUserById(userId);
-        if(interestedUser == null) {
+        if (interestedUser == null) {
             throw new UserDoesNotExistException();
         }
         OperationIntent operationIntent = operationIntentService.getOperationIntentById(operationIntentId);
@@ -42,8 +43,8 @@ public class TransactionServiceImpl implements TransactionService {
             throw new OperationDoesNotExistException();
         } else if (operationIntent.getStatus().equals(OperationStatus.CLOSED)) {
             throw new OperationClosedException();
-        } else if (transactionRepository.existsByOperationIntentIdNotCancelled(operationIntentId)) {
-            throw new OperationExpiredException();
+        } else if (operationIntent.getStatus().equals(OperationStatus.IN_PROCESS)) {
+            throw new OperationInProcessException();
         }
         BigDecimal currentPrice = cryptoService.getCryptoCurrencyValue(operationIntent.getSymbol().toString()).getPrice();
         Transaction transaction = operationIntent.generateTransaction(interestedUser, currentPrice);
@@ -59,7 +60,12 @@ public class TransactionServiceImpl implements TransactionService {
         Transaction transaction = transactionRepository.findById(transactionId)
                 .orElseThrow(() -> new TransactionDoesNotExistException(transactionId));
         User user = userService.getUserById(userId);
-
+        if (user == null) {
+            throw new UserDoesNotExistException();
+        }
+        if (!transaction.getSeller().equals(user) && !transaction.getBuyer().equals(user)) {
+            throw new UnauthorizedUserException();
+        }
         switch (action) {
             case TRANSFERRED -> user.notifySentTransaction(transaction);
             case CONFIRMED -> user.notifyReceivedTransaction(transaction);

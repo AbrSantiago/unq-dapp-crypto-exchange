@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(UserController.class)
-public class UserControllerTest {
+class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -42,11 +42,10 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetAllUsers() throws Exception {
+    void testGetAllUsers() throws Exception {
         UserDTO userDTO1 = new UserDTO(new User("test1@example.com", "12345678", "John", "Doe", "123 Test St", "Passw0rd!", "1234567890123456789012"));
         UserDTO userDTO2 = new UserDTO(new User("test2@example.com", "87654321", "Jane", "Doe", "456 Another St", "Password123!", "8765432198765432109876"));
 
-        List<UserDTO> users = Arrays.asList(userDTO1, userDTO2);
         Mockito.when(userService.getAllUsers()).thenReturn(Arrays.asList(userDTO1.toModel(), userDTO2.toModel()));
 
         mockMvc.perform(get("/users")
@@ -57,7 +56,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testCreateUser_Success() throws Exception {
+    void testCreateUser_Success() throws Exception {
         User newUser = validUserDTO.toModel();
         Mockito.when(userService.registerUser(any(RegisterUserDTO.class))).thenReturn(newUser);
 
@@ -70,7 +69,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testCreateUser_UserAlreadyExists() throws Exception {
+    void testCreateUser_UserAlreadyExists() throws Exception {
         Mockito.when(userService.registerUser(any(RegisterUserDTO.class))).thenThrow(new UserAlreadyExistsException());
 
         mockMvc.perform(post("/users")
@@ -81,7 +80,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testCreateUser_InvalidUserData() throws Exception {
+    void testCreateUser_InvalidUserData() throws Exception {
         RegisterUserDTO invalidUserDTO = new RegisterUserDTO("", "", "", "", "", "weakpassword", "");
 
         mockMvc.perform(post("/users")

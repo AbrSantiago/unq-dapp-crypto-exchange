@@ -8,12 +8,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import ar.edu.unq.dapp_api.model.User;
-import ar.edu.unq.dapp_api.service.UserService;
 import ar.edu.unq.dapp_api.webservice.dto.operation_intent.NewOperationIntentDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -31,7 +28,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @WebMvcTest(OperationIntentController.class)
-public class OperationIntentControllerTest {
+class OperationIntentControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -45,14 +42,14 @@ public class OperationIntentControllerTest {
     private ObjectMapper objectMapper;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(operationIntentController).build();
         objectMapper = new ObjectMapper();
     }
 
     @Test
-    public void testCreateOperationIntent() throws Exception {
+    void testCreateOperationIntent() throws Exception {
         NewOperationIntentDTO newOperationIntentDTO = new NewOperationIntentDTO(
                 CryptoSymbol.BTCUSDT,
                 BigDecimal.valueOf(0.5),
@@ -80,7 +77,7 @@ public class OperationIntentControllerTest {
     }
 
     @Test
-    public void testGetActiveOperationIntentsFromUser() throws Exception {
+    void testGetActiveOperationIntentsFromUser() throws Exception {
         OperationIntent operationIntent1 = new OperationIntent();
         operationIntent1.setId(1L);
         operationIntent1.setSymbol(CryptoSymbol.BTCUSDT);
@@ -113,7 +110,7 @@ public class OperationIntentControllerTest {
     }
 
     @Test
-    public void createOperationIntent_InvalidUserId() throws Exception {
+    void createOperationIntent_InvalidUserId() throws Exception {
         NewOperationIntentDTO newOperationIntentDTO = new NewOperationIntentDTO(
                 CryptoSymbol.BTCUSDT,
                 BigDecimal.valueOf(0.5),
@@ -127,7 +124,7 @@ public class OperationIntentControllerTest {
     }
 
     @Test
-    public void getActiveOperationIntentsFromUser_NoActiveIntents() throws Exception {
+    void getActiveOperationIntentsFromUser_NoActiveIntents() throws Exception {
         when(operationIntentService.getActivesOperationIntentsFromUser(1L)).thenReturn(List.of());
 
         mockMvc.perform(get("/operation-intent/actives/1")
@@ -138,7 +135,7 @@ public class OperationIntentControllerTest {
     }
 
     @Test
-    public void getActiveOperationIntentsFromUser_InternalServerError() throws Exception {
+    void getActiveOperationIntentsFromUser_InternalServerError() throws Exception {
         when(operationIntentService.getActivesOperationIntentsFromUser(1L)).thenThrow(new RuntimeException("Service error"));
 
         mockMvc.perform(get("/operation-intent/actives/1")

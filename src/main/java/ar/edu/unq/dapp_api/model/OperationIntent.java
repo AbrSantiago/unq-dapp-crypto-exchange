@@ -36,6 +36,7 @@ public class OperationIntent {
     private User user;
 
     @OneToOne(mappedBy = "operationIntent", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private Transaction transaction;
 
     public OperationIntent(CryptoSymbol symbol, BigDecimal cryptoAmount, BigDecimal cryptoPrice, BigDecimal operationARSAmount, User user, IntentionType type) {
@@ -55,6 +56,9 @@ public class OperationIntent {
     public Transaction generateTransaction(User interestedUser, BigDecimal currentPrice) {
         if (this.status.equals(OperationStatus.CLOSED)) {
             throw new IllegalOperationException("Cannot generate transaction from closed operation intent");
+        }
+        if (this.status.equals(OperationStatus.IN_PROCESS)) {
+            throw new IllegalOperationException("Cannot generate transaction from in process operation intent");
         }
         if (interestedUser.getId().equals(this.getUser().getId())) {
             throw new IllegalArgumentException("User cannot buy/sell to himself");

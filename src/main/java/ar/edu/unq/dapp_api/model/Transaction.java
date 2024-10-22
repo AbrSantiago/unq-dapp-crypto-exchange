@@ -4,6 +4,7 @@ import ar.edu.unq.dapp_api.exception.InvalidTransactionStateException;
 import ar.edu.unq.dapp_api.exception.TransactionCompletedException;
 import ar.edu.unq.dapp_api.model.enums.IntentionType;
 import ar.edu.unq.dapp_api.model.enums.TransactionStatus;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,7 @@ public class Transaction {
 
     @OneToOne
     @JoinColumn(name = "operation_intent_id", nullable = false)
+    @JsonManagedReference
     private OperationIntent operationIntent;
 
     @ManyToOne
