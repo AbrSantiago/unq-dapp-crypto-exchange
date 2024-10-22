@@ -6,6 +6,7 @@ import ar.edu.unq.dapp_api.model.OperationIntent;
 import ar.edu.unq.dapp_api.model.Transaction;
 import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
+import ar.edu.unq.dapp_api.model.enums.OperationStatus;
 import ar.edu.unq.dapp_api.model.enums.TransactionStatus;
 import ar.edu.unq.dapp_api.repositories.TransactionRepository;
 import ar.edu.unq.dapp_api.service.CryptoService;
@@ -81,6 +82,7 @@ class TransactionServiceImplTest {
         when(cryptoService.getCryptoCurrencyValue(anyString())).thenReturn(new CryptoCurrency(CryptoSymbol.BTCUSDT, mockPrice, LocalTime.now()));
         when(mockOperationIntent.getSymbol()).thenReturn(CryptoSymbol.BTCUSDT);
         when(mockOperationIntent.generateTransaction(eq(mockUser), any(BigDecimal.class))).thenReturn(mockTransaction);
+        when(mockOperationIntent.getStatus()).thenReturn(OperationStatus.OPEN);
 
         // Mocking transaction repository save
         when(transactionRepository.save(mockTransaction)).thenReturn(mockTransaction);
@@ -93,6 +95,7 @@ class TransactionServiceImplTest {
         assertNotNull(transaction);  // Ensure that the transaction is not null
         assertEquals(mockTransaction, transaction);  // Ensure that returned transaction matches the mock
     }
+
     @Test
     void testProcessTransaction_TransactionDoesNotExist() {
         Long transactionId = 1L;
