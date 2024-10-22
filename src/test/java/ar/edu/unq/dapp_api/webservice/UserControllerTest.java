@@ -89,4 +89,5 @@ public class UserControllerTest {
                         .content(objectMapper.writeValueAsString(invalidUserDTO)))
                 .andExpect(status().isBadRequest());
     }
+
 }
