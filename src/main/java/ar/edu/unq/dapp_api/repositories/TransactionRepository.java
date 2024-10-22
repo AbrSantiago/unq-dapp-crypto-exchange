@@ -16,4 +16,11 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate
     );
+
+    @Query("SELECT CASE WHEN COUNT(t) > 0 THEN true ELSE false END FROM Transaction t " +
+            "WHERE t.operationIntent.id = :operationIntentId " +
+            "AND t.status <> ar.edu.unq.dapp_api.model.enums.TransactionStatus.CANCELLED ")
+    boolean existsByOperationIntentIdNotCancelled(
+            @Param("operationIntentId") Long operationIntentId
+    );
 }

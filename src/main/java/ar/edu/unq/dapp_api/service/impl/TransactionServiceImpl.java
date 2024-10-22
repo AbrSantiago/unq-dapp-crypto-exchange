@@ -4,6 +4,7 @@ import ar.edu.unq.dapp_api.exception.*;
 import ar.edu.unq.dapp_api.model.OperationIntent;
 import ar.edu.unq.dapp_api.model.Transaction;
 import ar.edu.unq.dapp_api.model.User;
+import ar.edu.unq.dapp_api.model.enums.OperationStatus;
 import ar.edu.unq.dapp_api.model.enums.TransactionStatus;
 import ar.edu.unq.dapp_api.repositories.TransactionRepository;
 import ar.edu.unq.dapp_api.service.CryptoService;
@@ -39,6 +40,10 @@ public class TransactionServiceImpl implements TransactionService {
         OperationIntent operationIntent = operationIntentService.getOperationIntentById(operationIntentId);
         if (operationIntent == null) {
             throw new OperationDoesNotExistException();
+        } else if (operationIntent.getStatus().equals(OperationStatus.CLOSED)) {
+            throw new OperationClosedException();
+        } else if (transactionRepository.existsByOperationIntentIdNotCancelled(operationIntentId)) {
+            throw new OperationExpiredException();
         }
         BigDecimal currentPrice = cryptoService.getCryptoCurrencyValue(operationIntent.getSymbol().toString()).getPrice();
         Transaction transaction = operationIntent.generateTransaction(interestedUser, currentPrice);
