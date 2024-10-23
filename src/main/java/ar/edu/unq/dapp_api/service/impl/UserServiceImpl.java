@@ -1,7 +1,7 @@
 package ar.edu.unq.dapp_api.service.impl;
 
 import ar.edu.unq.dapp_api.exception.UserAlreadyExistsException;
-import ar.edu.unq.dapp_api.exception.UserDoesNotExistException;
+import ar.edu.unq.dapp_api.exception.UserNotFoundException;
 import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.repositories.UserRepository;
 import ar.edu.unq.dapp_api.service.UserService;
@@ -50,6 +50,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(UserDoesNotExistException::new);
+        return userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
     }
 }

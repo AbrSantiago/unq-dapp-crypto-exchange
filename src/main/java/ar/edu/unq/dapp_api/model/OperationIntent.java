@@ -69,6 +69,7 @@ public class OperationIntent {
             transaction = new Transaction(this, this.getUser(), interestedUser);
         }
         this.validateTransaction(currentPrice);
+        this.status = OperationStatus.IN_PROCESS;
         return transaction;
     }
 

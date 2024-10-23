@@ -36,11 +36,11 @@ public class TransactionServiceImpl implements TransactionService {
     public Transaction createTransaction(Long userId, Long operationIntentId) {
         User interestedUser = userService.getUserById(userId);
         if (interestedUser == null) {
-            throw new UserDoesNotExistException();
+            throw new UserNotFoundException();
         }
         OperationIntent operationIntent = operationIntentService.getOperationIntentById(operationIntentId);
         if (operationIntent == null) {
-            throw new OperationDoesNotExistException();
+            throw new OperationNotFoundException();
         } else if (operationIntent.getStatus().equals(OperationStatus.CLOSED)) {
             throw new OperationClosedException();
         } else if (operationIntent.getStatus().equals(OperationStatus.IN_PROCESS)) {
@@ -61,7 +61,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new TransactionDoesNotExistException(transactionId));
         User user = userService.getUserById(userId);
         if (user == null) {
-            throw new UserDoesNotExistException();
+            throw new UserNotFoundException();
         }
         if (!transaction.getSeller().equals(user) && !transaction.getBuyer().equals(user)) {
             throw new UnauthorizedUserException();

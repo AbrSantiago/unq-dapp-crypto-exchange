@@ -11,8 +11,8 @@ import ar.edu.unq.dapp_api.service.CryptoService;
 import ar.edu.unq.dapp_api.service.UserService;
 import ar.edu.unq.dapp_api.service.integration.DollarService;
 import ar.edu.unq.dapp_api.webservice.dto.operation_intent.NewOperationIntentDTO;
-import ar.edu.unq.dapp_api.exception.UserDoesNotExistException;
-import ar.edu.unq.dapp_api.exception.OperationDoesNotExistException;
+import ar.edu.unq.dapp_api.exception.UserNotFoundException;
+import ar.edu.unq.dapp_api.exception.OperationNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -77,7 +77,7 @@ class OperationIntentServiceImplTest {
 
         when(userService.getUserById(userId)).thenReturn(null);
 
-        assertThrows(UserDoesNotExistException.class, () -> operationIntentService.createOperationIntent(userId, newOperationIntentDTO));
+        assertThrows(UserNotFoundException.class, () -> operationIntentService.createOperationIntent(userId, newOperationIntentDTO));
     }
 
     @Test
@@ -111,7 +111,7 @@ class OperationIntentServiceImplTest {
 
         when(operationIntentRepository.findById(operationIntentId)).thenReturn(Optional.empty());
 
-        assertThrows(OperationDoesNotExistException.class, () -> operationIntentService.getOperationIntentById(operationIntentId));
+        assertThrows(OperationNotFoundException.class, () -> operationIntentService.getOperationIntentById(operationIntentId));
     }
 
     @Test
@@ -134,6 +134,6 @@ class OperationIntentServiceImplTest {
 
         when(userService.getUserById(userId)).thenReturn(null);
 
-        assertThrows(UserDoesNotExistException.class, () -> operationIntentService.getActivesOperationIntentsFromUser(userId));
+        assertThrows(UserNotFoundException.class, () -> operationIntentService.getActivesOperationIntentsFromUser(userId));
     }
 }

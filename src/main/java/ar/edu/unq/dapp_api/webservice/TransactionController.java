@@ -1,5 +1,6 @@
 package ar.edu.unq.dapp_api.webservice;
 
+import ar.edu.unq.dapp_api.exception.*;
 import ar.edu.unq.dapp_api.model.Transaction;
 import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.service.TransactionService;
@@ -33,16 +34,23 @@ public class TransactionController {
     @PostMapping("/create")
     public ResponseEntity<Object> createTransaction(@Valid @RequestBody NewTransactionDTO newTransactionDTO) {
         try {
-            TransactionDTO transaction = TransactionDTO.fromModel(transactionService.createTransaction(
-                    newTransactionDTO.getUserId(),
-                    newTransactionDTO.getOperationIntentId()
-            ));
+            TransactionDTO transaction = TransactionDTO.fromModel(
+                    transactionService.createTransaction(
+                            newTransactionDTO.getUserId(),
+                            newTransactionDTO.getOperationIntentId()
+                    )
+            );
             return ResponseEntity.ok(transaction);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error creating new transaction: " + e.getMessage());
+        } catch (UserNotFoundException | OperationNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (OperationClosedException | OperationInProcessException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating new transaction: " + e.getMessage());
         }
     }
+
 
     @Operation(summary = "Process an action in the transaction")
     @PostMapping("/process/{transactionId}")
@@ -58,11 +66,27 @@ public class TransactionController {
             );
             ProcessedTransactionDTO transactionDTO = ProcessedTransactionDTO.fromModel(transaction, user);
             return ResponseEntity.ok(transactionDTO);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("User not found: " + e.getMessage());
+        } catch (TransactionDoesNotExistException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Transaction not found: " + e.getMessage());
+        } catch (UnauthorizedUserException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Unauthorized user: " + e.getMessage());
+        } catch (InvalidActionException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid action: " + e.getMessage());
+        } catch (NullActionException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Action cannot be null: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error processing a transaction: " + e.getMessage());
         }
     }
+
 
     @Operation(summary = "Get volume of transactions within a date range")
     @GetMapping("/getVolume")

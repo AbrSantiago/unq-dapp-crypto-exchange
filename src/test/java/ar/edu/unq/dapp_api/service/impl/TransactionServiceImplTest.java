@@ -57,7 +57,7 @@ class TransactionServiceImplTest {
         Long userId = 1L;
         when(userService.getUserById(userId)).thenReturn(null);
 
-        assertThrows(UserDoesNotExistException.class, () -> transactionService.createTransaction(userId, 1L));
+        assertThrows(UserNotFoundException.class, () -> transactionService.createTransaction(userId, 1L));
     }
 
     @Test
@@ -67,7 +67,7 @@ class TransactionServiceImplTest {
         when(userService.getUserById(userId)).thenReturn(mockUser);
         when(operationIntentService.getOperationIntentById(operationIntentId)).thenReturn(null);
 
-        assertThrows(OperationDoesNotExistException.class, () -> transactionService.createTransaction(userId, operationIntentId));
+        assertThrows(OperationNotFoundException.class, () -> transactionService.createTransaction(userId, operationIntentId));
     }
 
     @Test

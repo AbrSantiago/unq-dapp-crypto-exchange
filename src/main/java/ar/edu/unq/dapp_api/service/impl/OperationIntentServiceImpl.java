@@ -1,7 +1,7 @@
 package ar.edu.unq.dapp_api.service.impl;
 
-import ar.edu.unq.dapp_api.exception.OperationDoesNotExistException;
-import ar.edu.unq.dapp_api.exception.UserDoesNotExistException;
+import ar.edu.unq.dapp_api.exception.OperationNotFoundException;
+import ar.edu.unq.dapp_api.exception.UserNotFoundException;
 import ar.edu.unq.dapp_api.model.OperationIntent;
 import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
@@ -37,7 +37,7 @@ public class OperationIntentServiceImpl implements OperationIntentService {
     public OperationIntent createOperationIntent(Long userId, NewOperationIntentDTO newOperationIntentDTO) {
         User user = userService.getUserById(userId);
         if (user == null) {
-            throw new UserDoesNotExistException();
+            throw new UserNotFoundException();
         }
         CryptoSymbol symbol = newOperationIntentDTO.getSymbol();
         IntentionType type = newOperationIntentDTO.getType();
@@ -65,13 +65,13 @@ public class OperationIntentServiceImpl implements OperationIntentService {
 
     @Override
     public OperationIntent getOperationIntentById(Long operationIntentId) {
-        return operationIntentRepository.findById(operationIntentId).orElseThrow(OperationDoesNotExistException::new);
+        return operationIntentRepository.findById(operationIntentId).orElseThrow(OperationNotFoundException::new);
     }
 
     @Override
     public List<OperationIntent> getActivesOperationIntentsFromUser(Long userId) {
         if (userService.getUserById(userId) == null) {
-            throw new UserDoesNotExistException();
+            throw new UserNotFoundException();
         }
         return operationIntentRepository.findActivesOperationIntentsFromUser(userId, OperationStatus.OPEN);
     }

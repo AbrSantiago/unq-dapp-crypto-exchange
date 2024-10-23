@@ -75,8 +75,8 @@ class UserControllerTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validUserDTO)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("User already exists"));
+                .andExpect(status().isConflict())
+                .andExpect(content().string("User already exists with this email."));
     }
 
     @Test

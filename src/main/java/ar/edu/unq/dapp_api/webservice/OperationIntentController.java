@@ -1,5 +1,6 @@
 package ar.edu.unq.dapp_api.webservice;
 
+import ar.edu.unq.dapp_api.exception.UserNotFoundException;
 import ar.edu.unq.dapp_api.model.OperationIntent;
 import ar.edu.unq.dapp_api.service.OperationIntentService;
 import ar.edu.unq.dapp_api.webservice.dto.operation_intent.ExpressedOperationIntentDTO;
@@ -35,6 +36,9 @@ public class OperationIntentController {
             ExpressedOperationIntentDTO expressedOperationIntentDTO = ExpressedOperationIntentDTO
                     .fromModel(operationIntentService.createOperationIntent(userId, newOperationIntentDTO));
             return ResponseEntity.ok(expressedOperationIntentDTO);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("User not found: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error creating new operation intent: " + e.getMessage());
@@ -52,6 +56,9 @@ public class OperationIntentController {
                     operationIntent -> activeUserOperationIntentsDTOs.add(ActiveOperationIntentDTO.fromModel(operationIntent))
             );
             return ResponseEntity.ok(activeUserOperationIntentsDTOs);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("User not found: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error getting active operation intents for a user: " + e.getMessage());
