@@ -58,7 +58,7 @@ public class TransactionServiceImpl implements TransactionService {
             throw new NullActionException();
         }
         Transaction transaction = transactionRepository.findById(transactionId)
-                .orElseThrow(() -> new TransactionDoesNotExistException(transactionId));
+                .orElseThrow(() -> new TransactionNotFoundException(transactionId));
         User user = userService.getUserById(userId);
         if (user == null) {
             throw new UserNotFoundException();

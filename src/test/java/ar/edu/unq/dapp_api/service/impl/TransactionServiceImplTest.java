@@ -104,7 +104,7 @@ class TransactionServiceImplTest {
 
         when(transactionRepository.findById(transactionId)).thenReturn(Optional.empty());
 
-        assertThrows(TransactionDoesNotExistException.class, () -> transactionService.processTransaction(transactionId, userId, action));
+        assertThrows(TransactionNotFoundException.class, () -> transactionService.processTransaction(transactionId, userId, action));
     }
 
     @Test

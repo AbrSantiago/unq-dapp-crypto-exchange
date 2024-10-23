@@ -42,15 +42,17 @@ public class TransactionController {
             );
             return ResponseEntity.ok(transaction);
         } catch (UserNotFoundException | OperationNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Error creating transaction: " + e.getMessage());
         } catch (OperationClosedException | OperationInProcessException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error creating transaction: " + e.getMessage());
         }
         catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating new transaction: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error creating new transaction: " + e.getMessage());
         }
     }
-
 
     @Operation(summary = "Process an action in the transaction")
     @PostMapping("/process/{transactionId}")
@@ -66,27 +68,21 @@ public class TransactionController {
             );
             ProcessedTransactionDTO transactionDTO = ProcessedTransactionDTO.fromModel(transaction, user);
             return ResponseEntity.ok(transactionDTO);
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("User not found: " + e.getMessage());
-        } catch (TransactionDoesNotExistException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Transaction not found: " + e.getMessage());
+        } catch (UserNotFoundException | TransactionNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(getBody(e));
         } catch (UnauthorizedUserException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Unauthorized user: " + e.getMessage());
-        } catch (InvalidActionException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Invalid action: " + e.getMessage());
-        } catch (NullActionException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Action cannot be null: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(getBody(e));
+        } catch (InvalidActionException | NullActionException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getBody(e));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error processing a transaction: " + e.getMessage());
+                    .body("Error processing transaction: " + e.getMessage());
         }
     }
 
+    private static String getBody(RuntimeException e) {
+        return "Error processing transaction: " + e.getMessage();
+    }
 
     @Operation(summary = "Get volume of transactions within a date range")
     @GetMapping("/getVolume")

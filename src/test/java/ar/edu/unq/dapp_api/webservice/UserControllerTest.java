@@ -76,7 +76,7 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validUserDTO)))
                 .andExpect(status().isConflict())
-                .andExpect(content().string("User already exists with this email."));
+                .andExpect(content().string("Error creating user: User already exists"));
     }
 
     @Test

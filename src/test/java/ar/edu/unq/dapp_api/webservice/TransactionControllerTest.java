@@ -84,7 +84,7 @@ class TransactionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("User not found"));
+                .andExpect(content().string("Error creating transaction: User not found"));
     }
 
     @Test
@@ -116,7 +116,7 @@ class TransactionControllerTest {
     @Test
     void testProcessTransaction_transactionNotFound() throws Exception {
         when(transactionService.processTransaction(any(Long.class), any(Long.class), any()))
-                .thenThrow(new TransactionDoesNotExistException(1L));
+                .thenThrow(new TransactionNotFoundException(1L));
 
         TransactionActionDTO request = new TransactionActionDTO();
         request.setUserId(1L);
@@ -126,7 +126,7 @@ class TransactionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Transaction not found: Transaction with id 1 not found"));
+                .andExpect(content().string("Error processing transaction: Transaction with id 1 not found"));
     }
 
     @Test
