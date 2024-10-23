@@ -40,7 +40,7 @@ Este proyecto es un MVP (Minimum Viable Product) para un sistema de intercambio 
 | Estado de build en "Verde" | 🟢     |
 | Utilizar HSQLDB para persistir datos (opcion H2) | 🟢     |
 | Crear datos de prueba cuando levanta la aplicación | 🟢     |
-| Documentation de Endpoints (APIs) con Swagger (v3) |       |
+| Documentation de Endpoints (APIs) con Swagger (v3) | 🟢      |
 | TAG en GitHub y Confeccionar Release Notes de entrega 2 |       |
 | Implementar JOB de Coverage | 🟢     |
 | Listar cotizacion de criptoactivos | 🟢     |
@@ -48,4 +48,4 @@ Este proyecto es un MVP (Minimum Viable Product) para un sistema de intercambio 
 | Construir un listado donde se muestran las intenciones activas de compra/venta | 🟢     |
 | Procesar la transacción informada por un usuario | 🟢      |
 | Informar al usuario el volumen operado de cripto activos entre dos fechas | 🟢      |
-| Testing integral de 2 controllers (end-to-end) |       |
+| Testing integral de 2 controllers (end-to-end) | 🟢     |
