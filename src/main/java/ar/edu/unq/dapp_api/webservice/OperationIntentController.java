@@ -6,7 +6,11 @@ import ar.edu.unq.dapp_api.service.OperationIntentService;
 import ar.edu.unq.dapp_api.webservice.dto.operation_intent.ExpressedOperationIntentDTO;
 import ar.edu.unq.dapp_api.webservice.dto.operation_intent.NewOperationIntentDTO;
 import ar.edu.unq.dapp_api.webservice.dto.operation_intent.ActiveOperationIntentDTO;
+import ar.edu.unq.dapp_api.webservice.dto.transaction.TransactionDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +33,7 @@ public class OperationIntentController {
 
     @Operation(summary = "Create a new operation intent")
     @PostMapping("/create/{userId}")
+    @ApiResponse(responseCode = "200", description = "Operation created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExpressedOperationIntentDTO.class)))
     public ResponseEntity<Object> createOperationIntent(
             @Valid @RequestBody NewOperationIntentDTO newOperationIntentDTO,
             @PathVariable Long userId) {
@@ -47,6 +52,7 @@ public class OperationIntentController {
 
     @Operation(summary = "Get all active operation intents for a user")
     @GetMapping("/actives/{userId}")
+    @ApiResponse(responseCode = "200", description = "Active operation intents retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ActiveOperationIntentDTO[].class)))
     public ResponseEntity<Object> getActiveOperationIntentsFromUser(@PathVariable Long userId) {
         try {
             List<OperationIntent> activeUserOperationIntents = operationIntentService.getActivesOperationIntentsFromUser(userId);

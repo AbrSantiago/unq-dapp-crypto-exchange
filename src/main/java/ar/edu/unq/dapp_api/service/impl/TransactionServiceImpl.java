@@ -63,6 +63,9 @@ public class TransactionServiceImpl implements TransactionService {
         if (user == null) {
             throw new UserNotFoundException();
         }
+        if (action.equals(TransactionStatus.CONFIRMED) && transaction.getOperationIntent().getUser() != user) {
+            throw new UnauthorizedUserException();
+        }
         if (!transaction.getSeller().equals(user) && !transaction.getBuyer().equals(user)) {
             throw new UnauthorizedUserException();
         }

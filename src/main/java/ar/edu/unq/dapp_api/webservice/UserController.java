@@ -5,6 +5,12 @@ import ar.edu.unq.dapp_api.webservice.dto.user.RegisterUserDTO;
 import ar.edu.unq.dapp_api.webservice.dto.user.UserDTO;
 import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
@@ -18,6 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@Tag(name = "User services", description = "Manage users")
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
@@ -28,6 +35,7 @@ public class UserController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all users")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         List<UserDTO> userDTOs = new ArrayList<>();
@@ -38,6 +46,8 @@ public class UserController {
     }
 
     @PostMapping
+    @Operation(summary = "Create a new user")
+    @ApiResponse(responseCode = "200", description = "User created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class)))
     public ResponseEntity<Object> createUser(@Valid @RequestBody RegisterUserDTO simpleUser) {
         try {
             User user = userService.registerUser(simpleUser);

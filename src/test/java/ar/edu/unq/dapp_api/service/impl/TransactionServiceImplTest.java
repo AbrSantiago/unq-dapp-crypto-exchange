@@ -145,10 +145,14 @@ class TransactionServiceImplTest {
         Long userId = 1L;
         TransactionStatus action = TransactionStatus.CONFIRMED;
 
+        OperationIntent mockOperationIntent = mock(OperationIntent.class);
+        when(mockOperationIntent.getUser()).thenReturn(mockUser);
+
         when(transactionRepository.findById(transactionId)).thenReturn(Optional.of(mockTransaction));
         when(userService.getUserById(userId)).thenReturn(mockUser);
         when(mockTransaction.getSeller()).thenReturn(mockUser);
         when(mockTransaction.getBuyer()).thenReturn(mockUser);
+        when(mockTransaction.getOperationIntent()).thenReturn(mockOperationIntent);
 
         Transaction result = transactionService.processTransaction(transactionId, userId, action);
 

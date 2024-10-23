@@ -9,7 +9,11 @@ import ar.edu.unq.dapp_api.webservice.dto.transaction.NewTransactionDTO;
 import ar.edu.unq.dapp_api.webservice.dto.transaction.ProcessedTransactionDTO;
 import ar.edu.unq.dapp_api.webservice.dto.transaction.TransactionActionDTO;
 import ar.edu.unq.dapp_api.webservice.dto.transaction.TransactionDTO;
+import ar.edu.unq.dapp_api.webservice.dto.user.UserDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -32,6 +36,7 @@ public class TransactionController {
 
     @Operation(summary = "Create a new transaction")
     @PostMapping("/create")
+    @ApiResponse(responseCode = "200", description = "Transaction created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionDTO.class)))
     public ResponseEntity<Object> createTransaction(@Valid @RequestBody NewTransactionDTO newTransactionDTO) {
         try {
             TransactionDTO transaction = TransactionDTO.fromModel(
@@ -56,6 +61,8 @@ public class TransactionController {
 
     @Operation(summary = "Process an action in the transaction")
     @PostMapping("/process/{transactionId}")
+    @ApiResponse(responseCode = "200", description = "Transaction processed successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessedTransactionDTO.class))
+    )
     public ResponseEntity<Object> processTransaction(
             @PathVariable Long transactionId,
             @Valid @RequestBody TransactionActionDTO transactionActionDTO) {
@@ -86,6 +93,7 @@ public class TransactionController {
 
     @Operation(summary = "Get volume of transactions within a date range")
     @GetMapping("/getVolume")
+    @ApiResponse(responseCode = "200", description = "Volume of transactions retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Integer.class)))
     public ResponseEntity<Integer> getVolume(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
