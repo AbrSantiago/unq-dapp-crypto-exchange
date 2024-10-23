@@ -63,6 +63,12 @@ public class TransactionServiceImpl implements TransactionService {
         if (user == null) {
             throw new UserNotFoundException();
         }
+        if (transaction.getStatus().equals(TransactionStatus.CANCELLED)) {
+            throw new TransactionCancelledException();
+        }
+        if (transaction.getStatus().equals(TransactionStatus.CONFIRMED)) {
+            throw new TransactionConfirmedException();
+        }
         if (action.equals(TransactionStatus.CONFIRMED) && transaction.getOperationIntent().getUser() != user) {
             throw new UnauthorizedUserException();
         }

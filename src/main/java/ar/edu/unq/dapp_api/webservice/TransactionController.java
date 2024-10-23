@@ -79,7 +79,7 @@ public class TransactionController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(getBody(e));
         } catch (UnauthorizedUserException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(getBody(e));
-        } catch (InvalidActionException | NullActionException e) {
+        } catch (InvalidActionException | TransactionCancelledException | TransactionConfirmedException | NullActionException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getBody(e));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

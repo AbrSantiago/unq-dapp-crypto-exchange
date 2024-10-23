@@ -117,6 +117,7 @@ class TransactionServiceImplTest {
         when(userService.getUserById(userId)).thenReturn(mockUser);
         when(mockTransaction.getSeller()).thenReturn(mockUser);
         when(mockTransaction.getBuyer()).thenReturn(mockUser);
+        when(mockTransaction.getStatus()).thenReturn(TransactionStatus.PENDING);
 
         assertThrows(InvalidActionException.class, () -> transactionService.processTransaction(transactionId, userId, invalidAction));
     }
@@ -131,6 +132,7 @@ class TransactionServiceImplTest {
         when(userService.getUserById(userId)).thenReturn(mockUser);
         when(mockTransaction.getSeller()).thenReturn(mockUser);
         when(mockTransaction.getBuyer()).thenReturn(mockUser);
+        when(mockTransaction.getStatus()).thenReturn(TransactionStatus.TRANSFERRED);
 
         Transaction result = transactionService.processTransaction(transactionId, userId, action);
 
@@ -153,6 +155,7 @@ class TransactionServiceImplTest {
         when(mockTransaction.getSeller()).thenReturn(mockUser);
         when(mockTransaction.getBuyer()).thenReturn(mockUser);
         when(mockTransaction.getOperationIntent()).thenReturn(mockOperationIntent);
+        when(mockTransaction.getStatus()).thenReturn(TransactionStatus.PENDING);
 
         Transaction result = transactionService.processTransaction(transactionId, userId, action);
 
@@ -171,6 +174,7 @@ class TransactionServiceImplTest {
         when(userService.getUserById(userId)).thenReturn(mockUser);
         when(mockTransaction.getSeller()).thenReturn(mockUser);
         when(mockTransaction.getBuyer()).thenReturn(mockUser);
+        when(mockTransaction.getStatus()).thenReturn(TransactionStatus.PENDING);
 
         Transaction result = transactionService.processTransaction(transactionId, userId, action);
 
