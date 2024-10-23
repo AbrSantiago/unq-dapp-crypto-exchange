@@ -1,84 +1,92 @@
 package ar.edu.unq.dapp_api.webservice;
 
-import ar.edu.unq.dapp_api.exception.GlobalExceptionHandler;
+import ar.edu.unq.dapp_api.exception.UserAlreadyExistsException;
 import ar.edu.unq.dapp_api.model.User;
-import ar.edu.unq.dapp_api.repositories.UserRepository;
+import ar.edu.unq.dapp_api.service.UserService;
+import ar.edu.unq.dapp_api.webservice.dto.user.RegisterUserDTO;
+import ar.edu.unq.dapp_api.webservice.dto.user.UserDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@WebMvcTest(UserController.class)
 class UserControllerTest {
 
+    @Autowired
     private MockMvc mockMvc;
 
-    @Mock
-    private UserRepository userRepository;
+    @MockBean
+    private UserService userService;
 
-    @InjectMocks
-    private UserController userController;
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private RegisterUserDTO validUserDTO;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(userController)
-                .setControllerAdvice(new GlobalExceptionHandler())
-                .build();
+        validUserDTO = new RegisterUserDTO("test@example.com", "12345678", "John", "Doe", "123 Test St", "Passw0rd!", "1234567890123456789012");
     }
 
     @Test
-    void createUserShouldReturnCreatedWhenUserIsSuccessfullyCreated() throws Exception {
-        User user = new User("john.doe@example.com", "12345678", "John", "Doe", "123 Main St", "SecurePass1!", "1234567890123456789012");
-        when(userRepository.save(any(User.class))).thenReturn(user);
+    void testGetAllUsers() throws Exception {
+        UserDTO userDTO1 = new UserDTO(new User("test1@example.com", "12345678", "John", "Doe", "123 Test St", "Passw0rd!", "1234567890123456789012"));
+        UserDTO userDTO2 = new UserDTO(new User("test2@example.com", "87654321", "Jane", "Doe", "456 Another St", "Password123!", "8765432198765432109876"));
 
-        mockMvc.perform(post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"John\",\"surname\":\"Doe\",\"email\":\"john.doe@example.com\",\"address\":\"123 Main St\",\"password\":\"SecurePass1!\",\"cvu\":\"1234567890123456789012\",\"walletAddress\":\"12345678\",\"pointsObtained\":0,\"operationsPerformed\":0}"))
-                .andExpect(status().isCreated())
-                .andExpect(content().json("{\"name\":\"John\",\"surname\":\"Doe\",\"email\":\"john.doe@example.com\",\"address\":\"123 Main St\",\"password\":\"SecurePass1!\",\"cvu\":\"1234567890123456789012\",\"walletAddress\":\"12345678\",\"pointsObtained\":0,\"operationsPerformed\":0}"));
+        Mockito.when(userService.getAllUsers()).thenReturn(Arrays.asList(userDTO1.toModel(), userDTO2.toModel()));
+
+        mockMvc.perform(get("/users")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].email").value("test1@example.com"))
+                .andExpect(jsonPath("$[1].email").value("test2@example.com"));
     }
 
     @Test
-    void createUserShouldReturnConflictWhenEmailCVUOrWalletAddressAlreadyExists() throws Exception {
-        when(userRepository.save(any(User.class))).thenThrow(new DataIntegrityViolationException("Duplicate entry"));
+    void testCreateUser_Success() throws Exception {
+        User newUser = validUserDTO.toModel();
+        Mockito.when(userService.registerUser(any(RegisterUserDTO.class))).thenReturn(newUser);
 
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"John\",\"surname\":\"Doe\",\"email\":\"john.doe@example.com\",\"address\":\"123 Main St\",\"password\":\"SecurePass1!\",\"cvu\":\"1234567890123456789012\",\"walletAddress\":\"12345678\",\"pointsObtained\":0,\"operationsPerformed\":0}"))
+                        .content(objectMapper.writeValueAsString(validUserDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email").value("test@example.com"))
+                .andExpect(jsonPath("$.walletAddress").value("12345678"));
+    }
+
+    @Test
+    void testCreateUser_UserAlreadyExists() throws Exception {
+        Mockito.when(userService.registerUser(any(RegisterUserDTO.class))).thenThrow(new UserAlreadyExistsException());
+
+        mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(validUserDTO)))
                 .andExpect(status().isConflict())
-                .andExpect(content().string("A user with the same email, CVU, or wallet address already exists."));
+                .andExpect(content().string("Error creating user: User already exists"));
     }
 
     @Test
-    void getAllUsersShouldReturnOkWithEmptyListWhenNoUsersExist() throws Exception {
-        when(userRepository.findAll()).thenReturn(Collections.emptyList());
+    void testCreateUser_InvalidUserData() throws Exception {
+        RegisterUserDTO invalidUserDTO = new RegisterUserDTO("", "", "", "", "", "weakpassword", "");
 
-        mockMvc.perform(get("/users"))
-                .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
+        mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidUserDTO)))
+                .andExpect(status().isBadRequest());
     }
 
-    @Test
-    void getAllUsersShouldReturnOkWithListOfUsersWhenUsersExist() throws Exception {
-        User user = new User("john.doe@example.com", "12345678", "John", "Doe", "123 Main St", "SecurePass1!", "1234567890123456789012");
-        when(userRepository.findAll()).thenReturn(Collections.singletonList(user));
-
-        mockMvc.perform(get("/users"))
-                .andExpect(status().isOk())
-                .andExpect(content().json("[{\"name\":\"John\",\"surname\":\"Doe\",\"email\":\"john.doe@example.com\",\"address\":\"123 Main St\",\"password\":\"SecurePass1!\",\"cvu\":\"1234567890123456789012\",\"walletAddress\":\"12345678\",\"pointsObtained\":0,\"operationsPerformed\":0}]"));
-    }
 }

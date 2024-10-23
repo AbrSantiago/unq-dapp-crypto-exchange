@@ -2,108 +2,99 @@ package ar.edu.unq.dapp_api.model;
 
 import ar.edu.unq.dapp_api.model.builders.OperationIntentBuilder;
 import ar.edu.unq.dapp_api.model.builders.UserBuilder;
-import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
-import ar.edu.unq.dapp_api.model.enums.IntentionType;
 import ar.edu.unq.dapp_api.model.enums.OperationStatus;
 import ar.edu.unq.dapp_api.model.enums.TransactionStatus;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 class OperationIntentTest {
 
-    @Test
-    void constructorInitializesFieldsCorrectly() {
-        User user = new UserBuilder().withId(1L).build();
-        OperationIntent intent = new OperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000L, 50000L, user, IntentionType.BUY);
+    private OperationIntent operationIntent;
+    private User user;
 
-        assertEquals(CryptoSymbol.BTCUSDT, intent.getSymbol());
-        assertEquals(1L, intent.getCryptoAmount());
-        assertEquals(50000L, intent.getCryptoPrice());
-        assertEquals(50000L, intent.getOperationARSAmount());
-        assertEquals(user, intent.getUser());
-        assertEquals(IntentionType.BUY, intent.getType());
-        assertNotNull(intent.getDateTime());
-        assertEquals(OperationStatus.OPEN, intent.getStatus());
+    @BeforeEach
+    void setUp() {
+        user = new UserBuilder().withId(1L).build();
+        operationIntent = new OperationIntentBuilder()
+                .withUser(user)
+                .build();
     }
 
-    @Test
-    void generateTransactionCreatesTransactionForBuyIntention() {
-        User user = new UserBuilder().withId(1L).build();
-        User interestedUser = new UserBuilder().withId(2L).build();
-        OperationIntent intent = new OperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000L, 50000L, user, IntentionType.BUY);
 
-        Transaction transaction = intent.generateTransaction(interestedUser, 50000.0);
+    @Test
+    void generateTransactionCreatesTransactionWithCorrectValues() {
+        User interestedUser = new UserBuilder().withId(2L).build();
+        Transaction transaction = operationIntent.generateTransaction(interestedUser, BigDecimal.valueOf(50000));
 
         assertNotNull(transaction);
-        assertEquals(user, transaction.getBuyer());
+        assertEquals(operationIntent, transaction.getOperationIntent());
         assertEquals(interestedUser, transaction.getSeller());
+        assertEquals(user, transaction.getBuyer());
+        assertEquals(TransactionStatus.PENDING, transaction.getStatus());
     }
 
     @Test
-    void generateTransactionCreatesTransactionForSellIntention() {
-        User user = new UserBuilder().withId(1L).build();
+    void validateTransactionCancelsTransactionWhenPriceOutOfBounds() {
         User interestedUser = new UserBuilder().withId(2L).build();
-        OperationIntent intent = new OperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000L, 50000L, user, IntentionType.SELL);
+        operationIntent.generateTransaction(interestedUser, BigDecimal.valueOf(50000));
+        Transaction transaction = operationIntent.getTransaction();
 
-        Transaction transaction = intent.generateTransaction(interestedUser, 50000.0);
+        operationIntent.validateTransaction(BigDecimal.valueOf(60000));
 
-        assertNotNull(transaction);
-        assertEquals(user, transaction.getSeller());
-        assertEquals(interestedUser, transaction.getBuyer());
+        assertTrue(transaction.isCanceled());
     }
 
     @Test
-    void generateTransactionThrowsExceptionWhenUserIsSame() {
-        User user = new UserBuilder().withId(1L).build();
-        OperationIntent intent = new OperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000L, 50000L, user, IntentionType.BUY);
-
-        assertThrows(IllegalArgumentException.class, () -> intent.generateTransaction(user, 50000.0));
-    }
-
-    @Test
-    void generateTransactionCancelsTransactionWhenPriceIsTooLow() {
+    void validateTransactionDoesNotCancelTransactionWhenPriceWithinBounds() {
         User interestedUser = new UserBuilder().withId(2L).build();
-        OperationIntent intent = new OperationIntentBuilder().withCryptoPrice(50000L).build();
+        operationIntent.generateTransaction(interestedUser, BigDecimal.valueOf(50000));
+        Transaction transaction = operationIntent.getTransaction();
 
-        Transaction transaction = intent.generateTransaction(interestedUser, 47000.0);
+        operationIntent.validateTransaction(BigDecimal.valueOf(52000));
 
-        assertEquals(TransactionStatus.CANCELLED, transaction.getStatus());
+        assertFalse(transaction.isCanceled());
     }
 
     @Test
-    void generateTransactionCancelsTransactionWhenPriceIsTooHigh() {
-        User interestedUser = new UserBuilder().withId(2L).build();
-        OperationIntent intent = new OperationIntentBuilder().withCryptoPrice(50000L).build();
-
-        Transaction transaction = intent.generateTransaction(interestedUser, 53000.0);
-
-        assertEquals(TransactionStatus.CANCELLED, transaction.getStatus());
+    void closeChangesStatusToClosed() {
+        operationIntent.close();
+        assertEquals(OperationStatus.CLOSED, operationIntent.getStatus());
     }
 
     @Test
-    void closeSetsStatusToClosed() {
-        OperationIntent intent = new OperationIntentBuilder().build();
+    void checkCancelTransactionReturnsTrueWhenPriceBelowLowerBound() {
+        BigDecimal currentPrice = BigDecimal.valueOf(50000);
+        operationIntent = new OperationIntentBuilder()
+                .withCryptoPrice(BigDecimal.valueOf(47000))
+                .withUser(user)
+                .build();
 
-        intent.close();
-
-        assertEquals(OperationStatus.CLOSED, intent.getStatus());
+        assertTrue(operationIntent.checkCancelTransaction(currentPrice));
     }
 
     @Test
-    void generateTransactionThrowsExceptionWhenIsClosed() {
-        User user = new UserBuilder().withId(1L).build();
-        User interestedUser = new UserBuilder().withId(2L).build();
-        OperationIntent intent = new OperationIntentBuilder().withUser(user).build();
-        Transaction transaction = mock(Transaction.class);
+    void checkCancelTransactionReturnsTrueWhenPriceAboveUpperBound() {
+        BigDecimal currentPrice = BigDecimal.valueOf(50000);
+        operationIntent = new OperationIntentBuilder()
+                .withCryptoPrice(BigDecimal.valueOf(53000))
+                .withUser(user)
+                .build();
 
-        when(transaction.getStatus()).thenReturn(TransactionStatus.TRANSFERRED);
+        assertTrue(operationIntent.checkCancelTransaction(currentPrice));
+    }
 
+    @Test
+    void checkCancelTransactionReturnsFalseWhenPriceWithinBounds() {
+        BigDecimal currentPrice = BigDecimal.valueOf(50000);
+        operationIntent = new OperationIntentBuilder()
+                .withCryptoPrice(BigDecimal.valueOf(51000))
+                .withUser(user)
+                .build();
 
-        intent.generateTransaction(interestedUser, 53000.0);
-
-        assertEquals(OperationStatus.CLOSED, intent.getStatus());
+        assertFalse(operationIntent.checkCancelTransaction(currentPrice));
     }
 }

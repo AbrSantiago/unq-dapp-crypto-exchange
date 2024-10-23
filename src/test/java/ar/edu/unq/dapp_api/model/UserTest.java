@@ -11,6 +11,7 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -64,12 +65,6 @@ class UserTest {
         assertFalse(violations.isEmpty());
     }
 
-    @Test
-    void testInvalidUserPassword() {
-        User user = new UserBuilder().withPassword("password").build();
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        assertFalse(violations.isEmpty());
-    }
 
     @Test
     void testInvalidUserCvu() {
@@ -98,12 +93,13 @@ class UserTest {
     @Test
     void publishOperationIntentAddsIntentToUser() {
         User user = new UserBuilder().build();
-        OperationIntent intent = user.publishOperationIntent(CryptoSymbol.BTCUSDT, 1L, 50000L, 50000L, IntentionType.BUY);
+        OperationIntent intent = user.publishOperationIntent(CryptoSymbol.BTCUSDT, new BigDecimal("1.00"), new BigDecimal("50000.00"), new BigDecimal("50000.00"), IntentionType.BUY);
 
         assertNotNull(intent);
         assertEquals(1, user.getUserOperationIntents().size());
         assertEquals(intent, user.getUserOperationIntents().getFirst());
     }
+
 
     @Test
     void notifySentTransactionCompletesTransfer() {
@@ -158,14 +154,12 @@ class UserTest {
     }
 
     @Test
-    void discountPointsThrowsExceptionWhenPointsWouldBeNegative() {
+    void pointsAreDiscountedToZeroWhenResultIsNegative() {
         User user = new UserBuilder().withPointsObtained(5).build();
 
-        IllegalArgumentException thrown = assertThrows(
-            IllegalArgumentException.class, () -> user.discountPoints(10)
-        );
+        user.discountPoints(10);
 
-        assertEquals("Points cannot be negative", thrown.getMessage());
+        assertEquals(0, user.getPointsObtained());
     }
 
     @Test

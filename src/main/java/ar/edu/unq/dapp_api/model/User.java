@@ -4,13 +4,17 @@ import ar.edu.unq.dapp_api.exception.InvalidTransactionStateException;
 import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 import ar.edu.unq.dapp_api.model.enums.IntentionType;
 import ar.edu.unq.dapp_api.model.enums.TransactionStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -38,8 +42,6 @@ public class User {
     @NotBlank
     private String address;
 
-    @Size(min = 6, max = 30)
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\W).+$", message = "Password must contain at least one uppercase letter, one lowercase letter, and one special character")
     private String password;
 
     @Size(min = 22, max = 22)
@@ -58,8 +60,16 @@ public class User {
     @NotNull
     private int operationsPerformed;
 
-    @Transient
-    private List<OperationIntent> userOperationIntents;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<OperationIntent> userOperationIntents = new ArrayList<>();
+
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transaction> sellerTransactions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transaction> buyerTransactions = new ArrayList<>();
+
 
     public User(String email, String walletAddress, String name, String surname, String address, String password, String cvu) {
         this.email = email;
@@ -78,7 +88,7 @@ public class User {
         this.userOperationIntents = new ArrayList<>();
     }
 
-    public OperationIntent publishOperationIntent(CryptoSymbol symbol, Long cryptoAmount, Long cryptoPrice, Long operationARSAmount, IntentionType type) {
+    public OperationIntent publishOperationIntent(CryptoSymbol symbol, BigDecimal cryptoAmount, BigDecimal cryptoPrice, BigDecimal operationARSAmount, IntentionType type) {
         OperationIntent operationIntent = new OperationIntent(symbol, cryptoAmount, cryptoPrice, operationARSAmount, this, type);
         userOperationIntents.add(operationIntent);
         return operationIntent;
@@ -96,18 +106,41 @@ public class User {
         if (transaction.getStatus().equals(TransactionStatus.CONFIRMED) || transaction.getStatus().equals(TransactionStatus.TRANSFERRED)) {
             throw new InvalidTransactionStateException("Cannot cancel a transaction that is already confirmed or transferred");
         }
+        if (transaction.getStatus().equals(TransactionStatus.CANCELLED)) {
+            throw new InvalidTransactionStateException("Transaction already canceled");
+        }
         transaction.cancelTransaction();
         this.discountPoints(transaction.cancelByUserPoints());
     }
 
     public void discountPoints(int points) {
-        if (this.pointsObtained - points < 0) {
-            throw new IllegalArgumentException("Points cannot be negative");
-        }
-        this.pointsObtained -= points;
+        this.setPointsObtained(Math.max(this.pointsObtained - points, 0));
     }
 
     public void addPoints(int points) {
         pointsObtained += points;
+    }
+
+    public void addOperation() {
+        operationsPerformed++;
+    }
+
+    public int getReputation() {
+        if (operationsPerformed == 0 || pointsObtained == 0) {
+            return 0;
+        }
+        else return pointsObtained / operationsPerformed;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

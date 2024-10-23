@@ -5,4 +5,8 @@ import org.springframework.stereotype.Repository;
 import ar.edu.unq.dapp_api.model.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {}
+public interface UserRepository extends JpaRepository<User, Long> {
+    boolean existsByEmail(String email);
+    boolean existsByCvu(String cvu);
+    boolean existsByWalletAddress(String walletAddress);
+}
