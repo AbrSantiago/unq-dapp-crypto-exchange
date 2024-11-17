@@ -1,5 +1,6 @@
 package ar.edu.unq.dapp_api.repositories;
 
+import ar.edu.unq.dapp_api.archunit.ExcludeFromArchitectureCheck;
 import ar.edu.unq.dapp_api.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExcludeFromArchitectureCheck
 @DataJpaTest
 class UserRepositoryTest {
 

@@ -54,11 +54,11 @@ Este proyecto es un MVP (Minimum Viable Product) para un sistema de intercambio 
 
 | Entregable | Estado |
 |------------|--------|
-| Crear un test de arquitectura | |
-| Auditoria de Web-Services. Loguear <timestamp,user,operación/metodo, parámetros, tiempoDeEjecicion> de los servicios publicados con Spring utilizando Log4j/logback | |
-| TAG en GitHub y Release Notes | |
-| Configurar https://www.baeldung.com/spring-boot-prometheus (Metricas) | |
-| Configurar https://www.baeldung.com/spring-boot-actuators (Endpoints de Monitoreo) | |
-| Segurizar el acceso a la API (JWT) | |
-| Mostrar las cotizaciones de las últimas 24hs para un cripto activo dado | |
-| Listado de cotizaciones (alta performance - implementar cache) | |
+| Crear un test de arquitectura | 🟢     |
+| Auditoria de Web-Services. Loguear <timestamp,user,operación/metodo, parámetros, tiempoDeEjecicion> de los servicios publicados con Spring utilizando Log4j/logback |        |
+| TAG en GitHub y Release Notes |        |
+| Configurar https://www.baeldung.com/spring-boot-prometheus (Metricas) |        |
+| Configurar https://www.baeldung.com/spring-boot-actuators (Endpoints de Monitoreo) |        |
+| Segurizar el acceso a la API (JWT) |        |
+| Mostrar las cotizaciones de las últimas 24hs para un cripto activo dado |        |
+| Listado de cotizaciones (alta performance - implementar cache) |        |
