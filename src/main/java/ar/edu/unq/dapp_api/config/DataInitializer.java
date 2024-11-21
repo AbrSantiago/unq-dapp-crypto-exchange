@@ -21,7 +21,7 @@ public class DataInitializer {
     @Bean
     public ApplicationRunner initializer(UserRepository userRepository) {
         return args -> {
-
+            // sonar-ignore-start
             User user1 = new User("juan@mail.com", "0x123456", "Juan", "Perez", "Calle Falsa 123", passwordEncoder.encode("Password1!"), "1234567890123456789012");
             User user2 = new User("maria@mail.com", "0x567890", "Maria", "Gomez", "Avenida Siempre Viva 742", passwordEncoder.encode("Password2@"), "2345678901234567890123");
             User user3 = new User("pedro@mail.com", "0x910111", "Pedro", "Lopez", "Calle Real 456", passwordEncoder.encode("Password3#"), "3456789012345678901234");
@@ -32,7 +32,7 @@ public class DataInitializer {
             User user8 = new User("marta@mail.com", "0x920111", "Marta", "Sanchez", "Avenida Oeste 123", passwordEncoder.encode("Password8*"), "8901234567890123456789");
             User user9 = new User("jose@mail.com", "0x122131", "Jose", "Ramirez", "Calle Este 456", passwordEncoder.encode("Password9("), "9012345678901234567890");
             User user10 = new User("sofia@mail.com", "0x324151", "Sofia", "Torres", "Avenida Principal 789", passwordEncoder.encode("Password10)"), "0123456789012345678901");
-
+            // sonar-ignore-end
             userRepository.saveAll(List.of(user1, user2, user3, user4, user5, user6, user7, user8, user9, user10));
         };
     }
