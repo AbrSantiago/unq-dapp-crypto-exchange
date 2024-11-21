@@ -11,8 +11,7 @@ import java.util.List;
 
 public interface UserService extends UserDetailsService {
     User registerUser(RegisterUserDTO registerUserDTO);
-    UserDTO login(RequestLoginUserDTO loginUserDTO);
-
+    User login(RequestLoginUserDTO loginUserDTO);
     List<User> getAllUsers();
     User getUserById(Long userId);
 }

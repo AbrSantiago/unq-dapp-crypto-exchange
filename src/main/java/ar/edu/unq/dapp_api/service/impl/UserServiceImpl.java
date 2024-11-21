@@ -12,6 +12,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,7 +29,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, Validator validator, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, Validator validator, @Lazy PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.validator = validator;
         this.passwordEncoder = passwordEncoder;
@@ -56,20 +57,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO login(RequestLoginUserDTO loginUserDTO) {
-        // Buscar al usuario por email
+    public User login(RequestLoginUserDTO loginUserDTO) {
         User user = userRepository.findByEmail(loginUserDTO.getEmail());
         if (user == null) {
             throw new UserNotFoundException();
         }
 
-        // Verificar la contraseña
         if (!passwordEncoder.matches(loginUserDTO.getPassword(), user.getPassword())) {
             throw new UserNotFoundException();
         }
 
 
-        return UserDTO.fromUser(user);
+        return user;
     }
 
     @Override
