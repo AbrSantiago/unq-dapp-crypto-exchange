@@ -14,7 +14,7 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "secret";
+    private static final String SECRET_KEY = "gHGtQ4fgBhGQ32fgYByrnJFDkPLSdfyKXHtN345b98edscJKlw==";
 
     public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
