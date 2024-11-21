@@ -1,6 +1,5 @@
 package ar.edu.unq.dapp_api.security;
 
-import ar.edu.unq.dapp_api.service.UserService;
 import ar.edu.unq.dapp_api.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

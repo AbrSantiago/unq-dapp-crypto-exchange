@@ -14,9 +14,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -27,7 +29,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(TransactionController.class)
+@AutoConfigureMockMvc
+@SpringBootTest
 class TransactionControllerTest {
 
     @Autowired
@@ -43,6 +46,7 @@ class TransactionControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testCreateTransactionSuccessfully() throws Exception {
         Long userId = 1L;
         Long operationIntentId = 2L;
@@ -74,6 +78,7 @@ class TransactionControllerTest {
 
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testCreateTransaction_userNotFound() throws Exception {
         when(transactionService.createTransaction(any(Long.class), any(Long.class)))
                 .thenThrow(new UserNotFoundException());
@@ -88,6 +93,7 @@ class TransactionControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testProcessTransaction_successful() throws Exception {
         Long transactionId = 1L;
         Long userId = 1L;
@@ -114,6 +120,7 @@ class TransactionControllerTest {
         }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testProcessTransaction_transactionNotFound() throws Exception {
         when(transactionService.processTransaction(any(Long.class), any(Long.class), any()))
                 .thenThrow(new TransactionNotFoundException(1L));
@@ -130,6 +137,7 @@ class TransactionControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testGetTransactionVolume_successful() throws Exception {
         when(transactionService.getConfirmedTransactionsByDateRange(any(LocalDateTime.class), any(LocalDateTime.class)))
                 .thenReturn(10);

@@ -10,19 +10,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(UserController.class)
+@AutoConfigureMockMvc
+@SpringBootTest
 class UserControllerTest {
 
     @Autowired
@@ -42,6 +44,7 @@ class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testGetAllUsers() throws Exception {
         UserDTO userDTO1 = new UserDTO(new User("test1@example.com", "12345678", "John", "Doe", "123 Test St", "Passw0rd!", "1234567890123456789012"));
         UserDTO userDTO2 = new UserDTO(new User("test2@example.com", "87654321", "Jane", "Doe", "456 Another St", "Password123!", "8765432198765432109876"));
@@ -56,6 +59,7 @@ class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testCreateUser_Success() throws Exception {
         User newUser = validUserDTO.toModel();
         Mockito.when(userService.registerUser(any(RegisterUserDTO.class))).thenReturn(newUser);
@@ -69,6 +73,7 @@ class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testCreateUser_UserAlreadyExists() throws Exception {
         Mockito.when(userService.registerUser(any(RegisterUserDTO.class))).thenThrow(new UserAlreadyExistsException());
 
@@ -80,6 +85,7 @@ class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testCreateUser_InvalidUserData() throws Exception {
         RegisterUserDTO invalidUserDTO = new RegisterUserDTO("", "", "", "", "", "weakpassword", "");
 
