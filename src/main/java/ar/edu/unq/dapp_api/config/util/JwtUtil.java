@@ -1,4 +1,4 @@
-package ar.edu.unq.dapp_api.util;
+package ar.edu.unq.dapp_api.config.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

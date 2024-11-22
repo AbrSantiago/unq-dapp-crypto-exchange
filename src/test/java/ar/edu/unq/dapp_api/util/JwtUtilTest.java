@@ -1,5 +1,6 @@
 package ar.edu.unq.dapp_api.util;
 
+import ar.edu.unq.dapp_api.config.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

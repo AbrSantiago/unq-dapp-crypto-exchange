@@ -4,7 +4,7 @@ import ar.edu.unq.dapp_api.exception.UserAlreadyExistsException;
 import ar.edu.unq.dapp_api.exception.UserNotFoundException;
 import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.service.UserService;
-import ar.edu.unq.dapp_api.util.JwtUtil;
+import ar.edu.unq.dapp_api.config.util.JwtUtil;
 import ar.edu.unq.dapp_api.webservice.dto.user.RegisterUserDTO;
 import ar.edu.unq.dapp_api.webservice.dto.user.RequestLoginUserDTO;
 import ar.edu.unq.dapp_api.webservice.dto.user.UserDTO;

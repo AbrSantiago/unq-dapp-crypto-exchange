@@ -1,6 +1,6 @@
-package ar.edu.unq.dapp_api.security;
+package ar.edu.unq.dapp_api.config.security;
 
-import ar.edu.unq.dapp_api.util.JwtUtil;
+import ar.edu.unq.dapp_api.config.util.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -48,7 +48,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**", "/users/auth/**").permitAll()
+                        .requestMatchers("/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**", "/users/auth/**", "/actuator/prometheus").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
