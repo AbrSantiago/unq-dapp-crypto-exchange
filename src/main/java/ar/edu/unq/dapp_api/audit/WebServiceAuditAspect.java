@@ -19,9 +19,11 @@ import java.time.Instant;
 public class WebServiceAuditAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(WebServiceAuditAspect.class);
+    private final ObjectMapper objectMapper;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    public WebServiceAuditAspect(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
     public void controllerMethods() {}
