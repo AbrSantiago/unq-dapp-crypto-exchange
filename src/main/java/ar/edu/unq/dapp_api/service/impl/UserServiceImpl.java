@@ -37,22 +37,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registerUser(RegisterUserDTO registerUserDTO) {
-        // Validar el DTO
         Set<ConstraintViolation<RegisterUserDTO>> violations = validator.validate(registerUserDTO);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
 
-        // Verificar si el email ya existe
         if (userRepository.existsByEmail(registerUserDTO.getEmail())) {
             throw new UserAlreadyExistsException();
         }
 
-        // Codificar contraseña y convertir DTO a modelo
         registerUserDTO.setPassword(passwordEncoder.encode(registerUserDTO.getPassword()));
         User user = registerUserDTO.toModel();
 
-        // Guardar el usuario
         return userRepository.save(user);
     }
 
@@ -92,7 +88,7 @@ public class UserServiceImpl implements UserService {
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getEmail())
                 .password(user.getPassword())
-                .roles("USER") // Cambia esto si tienes roles específicos
+                .roles("USER")
                 .build();
     }
 
