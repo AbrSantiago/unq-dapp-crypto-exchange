@@ -31,7 +31,7 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
-    Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
                 .build()
@@ -39,7 +39,7 @@ public class JwtUtil {
                 .getBody();
     }
 
-    boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
