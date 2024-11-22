@@ -8,7 +8,7 @@ import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 import org.junit.jupiter.api.Test;
 
 @AnalyzeClasses(packages = "ar.edu.unq.dapp_api", importOptions = {ImportOption.DoNotIncludeTests.class})
-public class ArchUnitTest {
+class ArchUnitTest {
     private final JavaClasses classes = new ClassFileImporter()
             .withImportOption(location -> !location.contains("/test/")) // Exclude tests classes
             .importPackages("ar.edu.unq.dapp_api");

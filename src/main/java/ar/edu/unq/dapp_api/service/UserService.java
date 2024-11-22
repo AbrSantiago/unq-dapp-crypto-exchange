@@ -3,7 +3,6 @@ package ar.edu.unq.dapp_api.service;
 import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.webservice.dto.user.RegisterUserDTO;
 import ar.edu.unq.dapp_api.webservice.dto.user.RequestLoginUserDTO;
-import ar.edu.unq.dapp_api.webservice.dto.user.UserDTO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 
