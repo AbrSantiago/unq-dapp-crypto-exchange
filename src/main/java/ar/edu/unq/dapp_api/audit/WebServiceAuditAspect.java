@@ -5,6 +5,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
@@ -12,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Arrays;
 
 @Aspect
 @Component
@@ -20,38 +20,38 @@ public class WebServiceAuditAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(WebServiceAuditAspect.class);
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
     public void controllerMethods() {}
 
     @Around("controllerMethods()")
     public Object logWebServiceMethod(ProceedingJoinPoint joinPoint) throws Throwable {
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        // Start the timer
+        // Obtener timestamp de la ejecución
         Instant start = Instant.now();
 
-        // Obtain method details
+        // Obtener el usuario autenticado
         String user = getAuthenticatedUser();
+
+        // Nombre del método y parámetros
         String methodName = joinPoint.getSignature().getName();
+        Object[] args = joinPoint.getArgs();
+        String params = args != null ? objectMapper.writeValueAsString(args) : "no parameters";
 
-        // Serialize the arguments to JSON
-        String params = objectMapper.writeValueAsString(joinPoint.getArgs());
-
-        // Proceed with the method execution
+        // Ejecutar el método
         Object result = joinPoint.proceed();
 
-        // Measure execution time
+        // Calcular el tiempo de ejecución
         Instant end = Instant.now();
         long executionTime = Duration.between(start, end).toMillis();
 
-        // Log the details
+        // Loguear la auditoría
         String timestamp = java.time.format.DateTimeFormatter.ISO_INSTANT.format(start);
-        logger.info("Timestamp: {}, User: {}, Method: {}, Parameters: {}, ExecutionTime: {} ms",
-                timestamp, user, methodName, params, executionTime);
+        logger.info("Timestamp: {}, User: {}, Method: {}, Parameters: {}, ExecutionTime: {} ms", timestamp, user, methodName, params, executionTime);
 
         return result;
     }
-
 
     private String getAuthenticatedUser() {
         try {
