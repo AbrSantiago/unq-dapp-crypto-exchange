@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-public class OperationIntentValidatorTest {
+class OperationIntentValidatorTest {
 
     @Mock
     private DollarService dollarService; // Mockear DollarService
@@ -24,12 +24,12 @@ public class OperationIntentValidatorTest {
     private OperationIntentValidator validator; // Inyectar el mock en el validador
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this); // Inicializar los mocks
     }
 
     @Test
-    public void testValidOperationARSAmountWithinRange() {
+    void testValidOperationARSAmountWithinRange() {
         // Datos de prueba
         BigDecimal cryptoPrice = new BigDecimal("97662.79"); // Precio de BTC
         BigDecimal cryptoAmount = new BigDecimal("0.12"); // Cantidad de criptomonedas
@@ -49,7 +49,7 @@ public class OperationIntentValidatorTest {
     }
 
     @Test
-    public void testInvalidOperationARSAmountBelowLowerLimit() {
+    void testInvalidOperationARSAmountBelowLowerLimit() {
         // Datos de prueba
         BigDecimal cryptoPrice = new BigDecimal("97662.79"); // Precio de BTC
         BigDecimal cryptoAmount = new BigDecimal("0.12"); // Cantidad de criptomonedas
@@ -74,7 +74,7 @@ public class OperationIntentValidatorTest {
     }
 
     @Test
-    public void testInvalidOperationARSAmountAboveUpperLimit() {
+    void testInvalidOperationARSAmountAboveUpperLimit() {
         // Datos de prueba
         BigDecimal cryptoPrice = new BigDecimal("97662.79"); // Precio de BTC
         BigDecimal cryptoAmount = new BigDecimal("0.12"); // Cantidad de criptomonedas
@@ -99,7 +99,7 @@ public class OperationIntentValidatorTest {
     }
 
     @Test
-    public void testNullCryptoPriceShouldThrowException() {
+    void testNullCryptoPriceShouldThrowException() {
         // Datos de prueba con cryptoPrice nulo
         BigDecimal cryptoPrice = null;
         BigDecimal cryptoAmount = new BigDecimal("0.12");
@@ -121,7 +121,7 @@ public class OperationIntentValidatorTest {
     }
 
     @Test
-    public void testNullDollarValueShouldThrowException() {
+    void testNullDollarValueShouldThrowException() {
         // Datos de prueba con dólar nulo
         BigDecimal cryptoPrice = new BigDecimal("97662.79");
         BigDecimal cryptoAmount = new BigDecimal("0.12");
