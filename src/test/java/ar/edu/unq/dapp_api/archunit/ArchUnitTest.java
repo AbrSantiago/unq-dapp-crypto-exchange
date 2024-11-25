@@ -14,10 +14,10 @@ class ArchUnitTest {
             .importPackages("ar.edu.unq.dapp_api");
 
     @Test
-    void services_should_only_be_accessed_by_webservice_and_other_services() {
+    void services_should_only_be_accessed_by_webservice_validator_and_other_services() {
         ArchRuleDefinition.classes()
                 .that().resideInAPackage("..service..")
-                .should().onlyBeAccessed().byAnyPackage("..webservice..", "..service..")
+                .should().onlyBeAccessed().byAnyPackage("..webservice..", "..service..", "..validation..")
                 .check(classes);
     }
 

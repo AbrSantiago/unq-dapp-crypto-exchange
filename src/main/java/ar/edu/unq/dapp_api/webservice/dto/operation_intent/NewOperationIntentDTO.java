@@ -11,11 +11,13 @@ public class NewOperationIntentDTO {
 
     private CryptoSymbol symbol;
     private BigDecimal cryptoAmount;
+    private BigDecimal operationARSAmount;
     private IntentionType type;
 
-    public NewOperationIntentDTO(CryptoSymbol symbol, BigDecimal cryptoAmount, IntentionType type) {
+    public NewOperationIntentDTO(CryptoSymbol symbol, BigDecimal cryptoAmount, BigDecimal operationARSAmount,IntentionType type) {
         this.symbol = symbol;
         this.cryptoAmount = cryptoAmount;
+        this.operationARSAmount = operationARSAmount;
         this.type = type;
     }
 

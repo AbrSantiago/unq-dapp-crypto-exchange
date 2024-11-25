@@ -57,6 +57,7 @@ class OperationIntentControllerTest {
         NewOperationIntentDTO newOperationIntentDTO = new NewOperationIntentDTO(
                 CryptoSymbol.BTCUSDT,
                 BigDecimal.valueOf(0.5),
+                BigDecimal.valueOf(0.5),
                 IntentionType.BUY
         );
 
@@ -119,6 +120,7 @@ class OperationIntentControllerTest {
     void createOperationIntent_InvalidUserId() throws Exception {
         NewOperationIntentDTO newOperationIntentDTO = new NewOperationIntentDTO(
                 CryptoSymbol.BTCUSDT,
+                BigDecimal.valueOf(0.5),
                 BigDecimal.valueOf(0.5),
                 IntentionType.BUY
         );
