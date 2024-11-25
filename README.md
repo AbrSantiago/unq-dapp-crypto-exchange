@@ -2,7 +2,12 @@
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=AbrSantiago_unq-dapp-crypto-exchange&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=AbrSantiago_unq-dapp-crypto-exchange)
 
+H2 console: http://localhost:8080/h2-console
+
 Swagger: http://localhost:8080/swagger-ui/index.html
+
+Actuator: http://localhost:8080/actuator
+Grafana Dashboards: Correr prometheus y visualizar en http://localhost:3000/dashboards
 
 ## Descripción
 Este proyecto es un MVP (Minimum Viable Product) para un sistema de intercambio de criptomonedas Peer-to-Peer (P2P). El objetivo es crear una comunidad de confianza para canjear criptomonedas por pesos argentinos. El sistema es similar a billeteras que permiten pagos P2P entre personas, como Airtm, Skrill o Binance.
@@ -61,4 +66,4 @@ Este proyecto es un MVP (Minimum Viable Product) para un sistema de intercambio 
 | Configurar https://www.baeldung.com/spring-boot-actuators (Endpoints de Monitoreo) | 🟢     |
 | Segurizar el acceso a la API (JWT) | 🟢      |
 | Mostrar las cotizaciones de las últimas 24hs para un cripto activo dado | 🟢      |
-| Listado de cotizaciones (alta performance - implementar cache) |       |
+| Listado de cotizaciones (alta performance - implementar cache) | 🟢     |
