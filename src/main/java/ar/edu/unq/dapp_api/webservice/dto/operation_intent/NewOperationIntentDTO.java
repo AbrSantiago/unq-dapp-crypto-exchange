@@ -3,10 +3,12 @@ package ar.edu.unq.dapp_api.webservice.dto.operation_intent;
 import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 import ar.edu.unq.dapp_api.model.enums.IntentionType;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Getter
+@Setter
 public class NewOperationIntentDTO {
 
     private CryptoSymbol symbol;

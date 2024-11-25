@@ -5,15 +5,12 @@ import ar.edu.unq.dapp_api.model.OperationIntent;
 import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 import ar.edu.unq.dapp_api.model.enums.IntentionType;
-import ar.edu.unq.dapp_api.model.enums.OperationStatus;
 import ar.edu.unq.dapp_api.repositories.OperationIntentRepository;
 import ar.edu.unq.dapp_api.service.CryptoService;
 import ar.edu.unq.dapp_api.service.UserService;
 import ar.edu.unq.dapp_api.service.integration.DollarService;
 import ar.edu.unq.dapp_api.validation.OperationIntentValidator;
 import ar.edu.unq.dapp_api.webservice.dto.operation_intent.NewOperationIntentDTO;
-import ar.edu.unq.dapp_api.exception.UserNotFoundException;
-import ar.edu.unq.dapp_api.exception.OperationNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -22,9 +19,6 @@ import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
