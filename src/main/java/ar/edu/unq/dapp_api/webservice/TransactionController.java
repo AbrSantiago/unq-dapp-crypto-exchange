@@ -9,7 +9,6 @@ import ar.edu.unq.dapp_api.webservice.dto.transaction.NewTransactionDTO;
 import ar.edu.unq.dapp_api.webservice.dto.transaction.ProcessedTransactionDTO;
 import ar.edu.unq.dapp_api.webservice.dto.transaction.TransactionActionDTO;
 import ar.edu.unq.dapp_api.webservice.dto.transaction.TransactionDTO;
-import ar.edu.unq.dapp_api.webservice.dto.user.UserDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -3,7 +3,6 @@ package ar.edu.unq.dapp_api.service.impl;
 import ar.edu.unq.dapp_api.model.CryptoCurrency;
 import ar.edu.unq.dapp_api.model.CryptoCurrencyList;
 import ar.edu.unq.dapp_api.model.CryptoQuote;
-import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 import ar.edu.unq.dapp_api.repositories.CryptoRepository;
 import ar.edu.unq.dapp_api.service.CryptoService;
 import ar.edu.unq.dapp_api.service.integration.BinanceProxyService;
