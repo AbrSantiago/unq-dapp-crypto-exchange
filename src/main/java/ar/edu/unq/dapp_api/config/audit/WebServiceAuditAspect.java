@@ -1,6 +1,8 @@
 package ar.edu.unq.dapp_api.config.audit;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Around;
@@ -12,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 
 @Aspect
 @Component
@@ -38,7 +41,23 @@ public class WebServiceAuditAspect {
         // Nombre del método y parámetros
         String methodName = joinPoint.getSignature().getName();
         Object[] args = joinPoint.getArgs();
-        String params = args != null ? objectMapper.writeValueAsString(args) : "no parameters";
+        String params = "no parameters";
+
+        // Intentar serializar los parámetros del método
+        try {
+            if (args != null && args.length > 0) {
+                // Filtrar parámetros problemáticos como HttpServletRequest
+                Object[] filteredArgs = Arrays.stream(args)
+                        .filter(arg -> !(arg instanceof HttpServletRequest))
+                        .toArray();
+
+                // Serializar los parámetros filtrados
+                params = objectMapper.writeValueAsString(filteredArgs);
+            }
+        } catch (JsonProcessingException e) {
+            // Loguear error en caso de que no se pueda serializar, pero no interrumpir
+            logger.warn("Error serializing parameters for method {}: {}", methodName, e.getMessage());
+        }
 
         // Ejecutar el método
         Object result = joinPoint.proceed();
@@ -49,10 +68,13 @@ public class WebServiceAuditAspect {
 
         // Loguear la auditoría
         String timestamp = java.time.format.DateTimeFormatter.ISO_INSTANT.format(start);
-        logger.info("Timestamp: {}, User: {}, Method: {}, Parameters: {}, ExecutionTime: {} ms", timestamp, user, methodName, params, executionTime);
+        logger.info("Timestamp: {}, User: {}, Method: {}, Parameters: {}, ExecutionTime: {} ms",
+                timestamp, user, methodName, params, executionTime);
 
         return result;
     }
+
+
 
     private String getAuthenticatedUser() {
         try {
