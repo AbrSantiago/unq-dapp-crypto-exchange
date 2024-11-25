@@ -48,7 +48,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**", "/users/auth/**", "/actuator/prometheus").permitAll()
+                        .requestMatchers("/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**", "/users/auth/**", "/actuator/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
