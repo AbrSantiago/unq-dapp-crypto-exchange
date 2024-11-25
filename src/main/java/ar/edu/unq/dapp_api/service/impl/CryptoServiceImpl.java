@@ -2,12 +2,12 @@ package ar.edu.unq.dapp_api.service.impl;
 
 import ar.edu.unq.dapp_api.model.CryptoCurrency;
 import ar.edu.unq.dapp_api.model.CryptoCurrencyList;
-import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 import ar.edu.unq.dapp_api.repositories.CryptoRepository;
 import ar.edu.unq.dapp_api.service.CryptoService;
 import ar.edu.unq.dapp_api.service.integration.BinanceProxyService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -27,6 +27,7 @@ public class CryptoServiceImpl implements CryptoService {
     }
 
     @Override
+    @Cacheable("cryptos")
     public CryptoCurrencyList getAllCryptoCurrencyValues() {
         CryptoCurrencyList cryptoList = binanceProxyService.getAllCryptoCurrencyValue();
 
