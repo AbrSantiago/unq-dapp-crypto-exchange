@@ -7,7 +7,6 @@ import ar.edu.unq.dapp_api.repositories.UserRepository;
 import ar.edu.unq.dapp_api.service.UserService;
 import ar.edu.unq.dapp_api.webservice.dto.user.RegisterUserDTO;
 import ar.edu.unq.dapp_api.webservice.dto.user.RequestLoginUserDTO;
-import ar.edu.unq.dapp_api.webservice.dto.user.UserDTO;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
