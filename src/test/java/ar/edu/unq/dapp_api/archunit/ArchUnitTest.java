@@ -46,4 +46,15 @@ class ArchUnitTest {
 //                .should().onlyBeAccessed().byAnyPackage("..webservice..")
 //                .check(classes);
 //    }
+
+    @Test
+    void model_classes_should_not_depend_on_any_other_layer() {
+        ArchRuleDefinition.noClasses()
+                .that().resideInAPackage("..model..")
+                .should().dependOnClassesThat().resideInAnyPackage("..webservice..", "..service..", "..repositories..")
+                .check(classes);
+    }
+
 }
+
+
