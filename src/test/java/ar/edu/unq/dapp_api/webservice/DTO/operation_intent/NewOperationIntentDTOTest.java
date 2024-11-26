@@ -16,10 +16,11 @@ class NewOperationIntentDTOTest {
         // Given
         CryptoSymbol symbol = CryptoSymbol.BTCUSDT;
         BigDecimal cryptoAmount = BigDecimal.valueOf(0.5);
+        BigDecimal operationARSAmount = BigDecimal.valueOf(0.5);
         IntentionType type = IntentionType.BUY;
 
         // When
-        NewOperationIntentDTO dto = new NewOperationIntentDTO(symbol, cryptoAmount, type);
+        NewOperationIntentDTO dto = new NewOperationIntentDTO(symbol, cryptoAmount, operationARSAmount,type);
 
         // Then
         assertEquals(symbol, dto.getSymbol());
@@ -43,10 +44,11 @@ class NewOperationIntentDTOTest {
         // Given
         CryptoSymbol symbol = CryptoSymbol.BTCUSDT;
         BigDecimal cryptoAmount = BigDecimal.valueOf(1.2);
+        BigDecimal operationARSAmount = BigDecimal.valueOf(0.5);
         IntentionType type = IntentionType.SELL;
 
         // When
-        NewOperationIntentDTO dto = new NewOperationIntentDTO(symbol, cryptoAmount, type);
+        NewOperationIntentDTO dto = new NewOperationIntentDTO(symbol, cryptoAmount, operationARSAmount, type);
 
         // Then
         assertEquals(CryptoSymbol.BTCUSDT, dto.getSymbol());

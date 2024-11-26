@@ -1,12 +1,18 @@
 package ar.edu.unq.dapp_api.service.integration;
 
+import ar.edu.unq.dapp_api.exception.CryptoCurrencyNotFoundException;
 import ar.edu.unq.dapp_api.model.CryptoCurrency;
 import ar.edu.unq.dapp_api.model.CryptoCurrencyList;
+import ar.edu.unq.dapp_api.model.CryptoQuote;
 import ar.edu.unq.dapp_api.model.enums.CryptoSymbol;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,5 +45,28 @@ public class BinanceProxyService {
         return cryptoList;
     }
 
+    public List<CryptoQuote> getLast24HoursQuotes(String cryptoSymbol) {
+        String url = binanceApiURL + "klines?symbol=" + cryptoSymbol + "&interval=30m&limit=48";
+        Object[][] response = restTemplate.getForEntity(
+                url,
+                Object[][].class
+        ).getBody();
+        if (response == null) {
+            throw new CryptoCurrencyNotFoundException();
+        }
+        return createLast24HoursQuotesFromResponse(response);
+    }
 
+    private List<CryptoQuote> createLast24HoursQuotesFromResponse(Object[][] body) {
+        List<CryptoQuote> quotes = new ArrayList<>();
+        for (Object[] item : body) {
+            LocalDateTime timestamp = LocalDateTime.ofInstant(
+                    Instant.ofEpochMilli((Long) item[0]),
+                    ZoneId.systemDefault()
+            );
+            String price = (String) item[1];
+            quotes.add(new CryptoQuote(timestamp, price));
+        }
+        return quotes;
+    }
 }

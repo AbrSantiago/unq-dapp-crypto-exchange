@@ -1,9 +1,11 @@
 package ar.edu.unq.dapp_api.service.impl;
 
 import ar.edu.unq.dapp_api.exception.UserAlreadyExistsException;
+import ar.edu.unq.dapp_api.exception.UserNotFoundException;
 import ar.edu.unq.dapp_api.model.User;
 import ar.edu.unq.dapp_api.repositories.UserRepository;
 import ar.edu.unq.dapp_api.webservice.dto.user.RegisterUserDTO;
+import ar.edu.unq.dapp_api.webservice.dto.user.RequestLoginUserDTO;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -12,10 +14,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -105,5 +109,84 @@ class UserServiceImplTest {
         assertNotNull(result);
         assertTrue(result.isEmpty());
         verify(userRepository, times(1)).findAll();
+    }
+
+    @Test
+    void loginWithValidCredentialsReturnsUser() {
+        RequestLoginUserDTO loginDTO = new RequestLoginUserDTO("test@example.com", "Password1!");
+        User user = new User("test@example.com", "wallet123", "John", "Doe", "123 Main St", "encodedPassword", "123456789");
+
+        when(userRepository.findByEmail(loginDTO.getEmail())).thenReturn(user);
+        when(passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())).thenReturn(true);
+
+        User result = userService.login(loginDTO);
+
+        assertNotNull(result);
+        assertEquals("test@example.com", result.getEmail());
+        verify(userRepository, times(1)).findByEmail(loginDTO.getEmail());
+    }
+
+    @Test
+    void loginWithInvalidEmailThrowsUserNotFoundException() {
+        RequestLoginUserDTO loginDTO = new RequestLoginUserDTO("invalid@example.com", "Password1!");
+
+        when(userRepository.findByEmail(loginDTO.getEmail())).thenReturn(null);
+
+        assertThrows(UserNotFoundException.class, () -> userService.login(loginDTO));
+        verify(userRepository, times(1)).findByEmail(loginDTO.getEmail());
+    }
+
+    @Test
+    void loginWithInvalidPasswordThrowsUserNotFoundException() {
+        RequestLoginUserDTO loginDTO = new RequestLoginUserDTO("test@example.com", "WrongPassword");
+        User user = new User("test@example.com", "wallet123", "John", "Doe", "123 Main St", "encodedPassword", "123456789");
+
+        when(userRepository.findByEmail(loginDTO.getEmail())).thenReturn(user);
+        when(passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())).thenReturn(false);
+
+        assertThrows(UserNotFoundException.class, () -> userService.login(loginDTO));
+        verify(userRepository, times(1)).findByEmail(loginDTO.getEmail());
+    }
+
+    @Test
+    void getUserByIdWithValidIdReturnsUser() {
+        User user = new User("test@example.com", "wallet123", "John", "Doe", "123 Main St", "Password1!", "123456789");
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        User result = userService.getUserById(1L);
+
+        assertNotNull(result);
+        assertEquals("test@example.com", result.getEmail());
+        verify(userRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void getUserByIdWithInvalidIdThrowsUserNotFoundException() {
+        when(userRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, () -> userService.getUserById(99L));
+        verify(userRepository, times(1)).findById(99L);
+    }
+
+    @Test
+    void loadUserByUsernameWithValidEmailReturnsUserDetails() {
+        User user = new User("test@example.com", "wallet123", "John", "Doe", "123 Main St", "encodedPassword", "123456789");
+
+        when(userRepository.findByEmail("test@example.com")).thenReturn(user);
+
+        var userDetails = userService.loadUserByUsername("test@example.com");
+
+        assertNotNull(userDetails);
+        assertEquals("test@example.com", userDetails.getUsername());
+        verify(userRepository, times(1)).findByEmail("test@example.com");
+    }
+
+    @Test
+    void loadUserByUsernameWithInvalidEmailThrowsUsernameNotFoundException() {
+        when(userRepository.findByEmail("nonexistent@example.com")).thenReturn(null);
+
+        assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername("nonexistent@example.com"));
+        verify(userRepository, times(1)).findByEmail("nonexistent@example.com");
     }
 }

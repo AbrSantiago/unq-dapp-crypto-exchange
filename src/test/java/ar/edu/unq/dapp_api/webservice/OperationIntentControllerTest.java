@@ -13,9 +13,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ar.edu.unq.dapp_api.model.OperationIntent;
@@ -27,7 +29,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.util.List;
 
-@WebMvcTest(OperationIntentController.class)
+@AutoConfigureMockMvc
+@SpringBootTest
 class OperationIntentControllerTest {
 
     @Autowired
@@ -49,9 +52,11 @@ class OperationIntentControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testCreateOperationIntent() throws Exception {
         NewOperationIntentDTO newOperationIntentDTO = new NewOperationIntentDTO(
                 CryptoSymbol.BTCUSDT,
+                BigDecimal.valueOf(0.5),
                 BigDecimal.valueOf(0.5),
                 IntentionType.BUY
         );
@@ -77,6 +82,7 @@ class OperationIntentControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void testGetActiveOperationIntentsFromUser() throws Exception {
         OperationIntent operationIntent1 = new OperationIntent();
         operationIntent1.setId(1L);
@@ -110,9 +116,11 @@ class OperationIntentControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void createOperationIntent_InvalidUserId() throws Exception {
         NewOperationIntentDTO newOperationIntentDTO = new NewOperationIntentDTO(
                 CryptoSymbol.BTCUSDT,
+                BigDecimal.valueOf(0.5),
                 BigDecimal.valueOf(0.5),
                 IntentionType.BUY
         );
@@ -124,6 +132,7 @@ class OperationIntentControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void getActiveOperationIntentsFromUser_NoActiveIntents() throws Exception {
         when(operationIntentService.getActivesOperationIntentsFromUser(1L)).thenReturn(List.of());
 
@@ -135,6 +144,7 @@ class OperationIntentControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void getActiveOperationIntentsFromUser_InternalServerError() throws Exception {
         when(operationIntentService.getActivesOperationIntentsFromUser(1L)).thenThrow(new RuntimeException("Service error"));
 

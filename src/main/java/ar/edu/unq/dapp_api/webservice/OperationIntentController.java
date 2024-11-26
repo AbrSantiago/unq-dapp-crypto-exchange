@@ -6,7 +6,6 @@ import ar.edu.unq.dapp_api.service.OperationIntentService;
 import ar.edu.unq.dapp_api.webservice.dto.operation_intent.ExpressedOperationIntentDTO;
 import ar.edu.unq.dapp_api.webservice.dto.operation_intent.NewOperationIntentDTO;
 import ar.edu.unq.dapp_api.webservice.dto.operation_intent.ActiveOperationIntentDTO;
-import ar.edu.unq.dapp_api.webservice.dto.transaction.TransactionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

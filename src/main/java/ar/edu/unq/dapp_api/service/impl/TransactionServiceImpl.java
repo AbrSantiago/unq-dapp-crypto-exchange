@@ -11,6 +11,7 @@ import ar.edu.unq.dapp_api.service.CryptoService;
 import ar.edu.unq.dapp_api.service.OperationIntentService;
 import ar.edu.unq.dapp_api.service.TransactionService;
 import ar.edu.unq.dapp_api.service.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Service
+@Transactional
 public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
     private final UserService userService;
