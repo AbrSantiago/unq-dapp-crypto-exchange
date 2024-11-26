@@ -2,6 +2,7 @@ package ar.edu.unq.dapp_api.service.impl;
 
 import ar.edu.unq.dapp_api.model.CryptoCurrency;
 import ar.edu.unq.dapp_api.model.CryptoCurrencyList;
+import ar.edu.unq.dapp_api.model.CryptoQuote;
 import ar.edu.unq.dapp_api.repositories.CryptoRepository;
 import ar.edu.unq.dapp_api.service.integration.BinanceProxyService;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,5 +66,41 @@ class CryptoServiceImplTest {
 
         assertNull(result);
         verify(cryptoRepository, never()).save(any(CryptoCurrency.class));
+    }
+
+    @Test
+    void getLast24HoursQuotes_Success() {
+        String cryptoSymbol = "BTCUSDT";
+        List<CryptoQuote> mockQuotes = List.of(mock(CryptoQuote.class));
+        when(binanceProxyService.getLast24HoursQuotes(cryptoSymbol)).thenReturn(mockQuotes);
+
+        List<CryptoQuote> result = cryptoService.getLast24HoursQuotes(cryptoSymbol);
+
+        assertNotNull(result);
+        assertEquals(mockQuotes.size(), result.size());
+        verify(binanceProxyService).getLast24HoursQuotes(cryptoSymbol);
+    }
+
+    @Test
+    void getLast24HoursQuotes_NoQuotes() {
+        String cryptoSymbol = "BTCUSDT";
+        when(binanceProxyService.getLast24HoursQuotes(cryptoSymbol)).thenReturn(List.of());
+
+        List<CryptoQuote> result = cryptoService.getLast24HoursQuotes(cryptoSymbol);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(binanceProxyService).getLast24HoursQuotes(cryptoSymbol);
+    }
+
+    @Test
+    void getLast24HoursQuotes_NullResponse() {
+        String cryptoSymbol = "BTCUSDT";
+        when(binanceProxyService.getLast24HoursQuotes(cryptoSymbol)).thenReturn(null);
+
+        List<CryptoQuote> result = cryptoService.getLast24HoursQuotes(cryptoSymbol);
+
+        assertNull(result);
+        verify(binanceProxyService).getLast24HoursQuotes(cryptoSymbol);
     }
 }

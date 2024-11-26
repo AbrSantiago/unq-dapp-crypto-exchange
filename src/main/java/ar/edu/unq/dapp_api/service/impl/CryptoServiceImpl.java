@@ -51,7 +51,6 @@ public class CryptoServiceImpl implements CryptoService {
         return crypto;
     }
 
-    @Override
     public List<CryptoQuote> getLast24HoursQuotes(String cryptoSymbol) {
         return binanceProxyService.getLast24HoursQuotes(cryptoSymbol);
     }
