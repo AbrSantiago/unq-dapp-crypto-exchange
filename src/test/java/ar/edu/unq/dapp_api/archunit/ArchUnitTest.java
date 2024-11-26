@@ -30,22 +30,14 @@ class ArchUnitTest {
                 .check(classes);
     }
 
-//    @Test
-//    void controllers_should_not_depend_on_model_or_repositories_directly() {
-//        ArchRuleDefinition.noClasses()
-//                .that().resideInAPackage("..webservice..")
-//                .should().dependOnClassesThat().resideInAPackage("..model..")
-//                .orShould().dependOnClassesThat().resideInAPackage("..repositories..")
-//                .check(classes);
-//    }
-//
-//    @Test
-//    void dto_classes_should_only_be_accessed_by_webservice() {
-//        ArchRuleDefinition.classes()
-//                .that().resideInAPackage("..webservice.dto..")
-//                .should().onlyBeAccessed().byAnyPackage("..webservice..")
-//                .check(classes);
-//    }
+    @Test
+    void controllers_should_not_depend_on_repositories_directly() {
+        ArchRuleDefinition.noClasses()
+                .that().resideInAPackage("..webservice..")
+                //.should().dependOnClassesThat().resideInAPackage("..model..")
+                .should().dependOnClassesThat().resideInAPackage("..repositories..")
+                .check(classes);
+    }
 
     @Test
     void model_classes_should_not_depend_on_any_other_layer() {
@@ -54,7 +46,4 @@ class ArchUnitTest {
                 .should().dependOnClassesThat().resideInAnyPackage("..webservice..", "..service..", "..repositories..")
                 .check(classes);
     }
-
 }
-
-
