@@ -50,10 +50,10 @@ public class UserController {
         return ResponseEntity.ok(userDTOs);
     }
 
-    @PostMapping
+    @PostMapping("/auth/register")
     @Operation(summary = "Create a new user")
     @ApiResponse(responseCode = "200", description = "User created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class)))
-    public ResponseEntity<Object> createUser(@Valid @RequestBody RegisterUserDTO simpleUser) {
+    public ResponseEntity<Object> register(@Valid @RequestBody RegisterUserDTO simpleUser) {
         try {
             User user = userService.registerUser(simpleUser);
             return ResponseEntity.ok(new UserDTO(user));

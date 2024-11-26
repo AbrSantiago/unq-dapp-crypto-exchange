@@ -66,11 +66,11 @@ class UserControllerTest {
 
     @Test
     @WithMockUser(username = "user", roles = {"USER"})
-    void testCreateUser_Success() throws Exception {
+    void testRegister_Success() throws Exception {
         User newUser = validUserDTO.toModel();
         Mockito.when(userService.registerUser(any(RegisterUserDTO.class))).thenReturn(newUser);
 
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/users/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validUserDTO)))
                 .andExpect(status().isOk())
@@ -80,10 +80,10 @@ class UserControllerTest {
 
     @Test
     @WithMockUser(username = "user", roles = {"USER"})
-    void testCreateUser_UserAlreadyExists() throws Exception {
+    void testRegisterAlreadyExists() throws Exception {
         Mockito.when(userService.registerUser(any(RegisterUserDTO.class))).thenThrow(new UserAlreadyExistsException());
 
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/users/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validUserDTO)))
                 .andExpect(status().isConflict())
@@ -92,10 +92,10 @@ class UserControllerTest {
 
     @Test
     @WithMockUser(username = "user", roles = {"USER"})
-    void testCreateUser_InvalidUserData() throws Exception {
+    void testRegisterData() throws Exception {
         RegisterUserDTO invalidUserDTO = new RegisterUserDTO("", "", "", "", "", "weakpassword", "");
 
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/users/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidUserDTO)))
                 .andExpect(status().isBadRequest());
@@ -135,11 +135,11 @@ class UserControllerTest {
 
     @Test
     @WithMockUser(username = "user", roles = {"USER"})
-    void testCreateUser_UnexpectedError() throws Exception {
+    void testRegister_UnexpectedError() throws Exception {
         Mockito.when(userService.registerUser(any(RegisterUserDTO.class)))
                 .thenThrow(new RuntimeException("Unexpected server error"));
 
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/users/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validUserDTO)))
                 .andExpect(status().isInternalServerError())
